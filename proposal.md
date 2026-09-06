@@ -37,7 +37,7 @@ To explore this main question, our visualizations will help users investigate se
 
 
 ## 2. Dataset(s)
-We plan to use daily observations from July 2016 through June 2026, giving us approximately ten years of data. 
+We plan to use daily observations from July 2016 through June 2026.
 
 ### Dataset 1: [S&P 500](https://fred.stlouisfed.org/series/SP500)
 
@@ -150,7 +150,7 @@ Our project will include five connected interactive visualizations:
 
 
 ## 6. Interim Presentation Deliverables
-By the Interim Presentation, we plan to have the datasets cleaned and combined, market conditions defined, and initial analysis completed. We will also have designs for all five visualizations and at least two working D3.js prototypes. We will present our initial findings, designs, prototypes, and an example of interaction between visualizations.
+By the Interim Presentation, we plan to have the datasets cleaned and combined, market conditions defined, and initial analysis completed. We will also have designs for all five visualizations and at least two working D3.js prototypes. We will present our initial findings, designs, prototypes, and interaction between visualizations.
 
 ## 7. Timeline and Milestones
 
