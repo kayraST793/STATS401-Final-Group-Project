@@ -1,0 +1,442 @@
+{
+  "conditionOrder": [
+    "Calm-Up",
+    "Calm-Down",
+    "Volatile-Up",
+    "Volatile-Down"
+  ],
+  "records": [
+    {
+      "code": "NoDur",
+      "industry": "Consumer NonDurables",
+      "condition": "Calm-Up",
+      "mean": 0.20560367454068243,
+      "std": 0.588215158492455,
+      "sharpe": 0.3495382116088729,
+      "n": 762
+    },
+    {
+      "code": "NoDur",
+      "industry": "Consumer NonDurables",
+      "condition": "Calm-Down",
+      "mean": -0.1697228144989339,
+      "std": 0.5938939010791997,
+      "sharpe": -0.28577968925176794,
+      "n": 469
+    },
+    {
+      "code": "NoDur",
+      "industry": "Consumer NonDurables",
+      "condition": "Volatile-Up",
+      "mean": 0.5944651952461799,
+      "std": 1.0071257652522192,
+      "sharpe": 0.5902591471257864,
+      "n": 589
+    },
+    {
+      "code": "NoDur",
+      "industry": "Consumer NonDurables",
+      "condition": "Volatile-Down",
+      "mean": -0.561017214397496,
+      "std": 1.1425942809789356,
+      "sharpe": -0.4910029953211701,
+      "n": 639
+    },
+    {
+      "code": "Durbl",
+      "industry": "Consumer Durables",
+      "condition": "Calm-Up",
+      "mean": 0.7711417322834646,
+      "std": 1.7649239398325653,
+      "sharpe": 0.43692632576371604,
+      "n": 762
+    },
+    {
+      "code": "Durbl",
+      "industry": "Consumer Durables",
+      "condition": "Calm-Down",
+      "mean": -0.507953091684435,
+      "std": 1.4331727958456977,
+      "sharpe": -0.35442557461097923,
+      "n": 469
+    },
+    {
+      "code": "Durbl",
+      "industry": "Consumer Durables",
+      "condition": "Volatile-Up",
+      "mean": 1.6451103565365028,
+      "std": 2.584979479196837,
+      "sharpe": 0.6364113795780092,
+      "n": 589
+    },
+    {
+      "code": "Durbl",
+      "industry": "Consumer Durables",
+      "condition": "Volatile-Down",
+      "mean": -1.6683411580594678,
+      "std": 2.5318001456419577,
+      "sharpe": -0.658954523298855,
+      "n": 639
+    },
+    {
+      "code": "Manuf",
+      "industry": "Manufacturing",
+      "condition": "Calm-Up",
+      "mean": 0.5442257217847769,
+      "std": 0.6922474711654008,
+      "sharpe": 0.7861722064055665,
+      "n": 762
+    },
+    {
+      "code": "Manuf",
+      "industry": "Manufacturing",
+      "condition": "Calm-Down",
+      "mean": -0.39852878464818764,
+      "std": 0.6138206760556655,
+      "sharpe": -0.649259303562538,
+      "n": 469
+    },
+    {
+      "code": "Manuf",
+      "industry": "Manufacturing",
+      "condition": "Volatile-Up",
+      "mean": 1.1352801358234297,
+      "std": 1.3772982516911674,
+      "sharpe": 0.8242805321428626,
+      "n": 589
+    },
+    {
+      "code": "Manuf",
+      "industry": "Manufacturing",
+      "condition": "Volatile-Down",
+      "mean": -1.1235367762128325,
+      "std": 1.4313137129790956,
+      "sharpe": -0.7849689177324621,
+      "n": 639
+    },
+    {
+      "code": "Enrgy",
+      "industry": "Energy",
+      "condition": "Calm-Up",
+      "mean": 0.30898950131233593,
+      "std": 1.0841492797867078,
+      "sharpe": 0.28500641661923676,
+      "n": 762
+    },
+    {
+      "code": "Enrgy",
+      "industry": "Energy",
+      "condition": "Calm-Down",
+      "mean": -0.27515991471215356,
+      "std": 1.160730974564224,
+      "sharpe": -0.23705744116586316,
+      "n": 469
+    },
+    {
+      "code": "Enrgy",
+      "industry": "Energy",
+      "condition": "Volatile-Up",
+      "mean": 0.9772665534804752,
+      "std": 2.2220667813702684,
+      "sharpe": 0.4398007124150563,
+      "n": 589
+    },
+    {
+      "code": "Enrgy",
+      "industry": "Energy",
+      "condition": "Volatile-Down",
+      "mean": -0.8652895148669798,
+      "std": 2.330177694947524,
+      "sharpe": -0.37134057061106074,
+      "n": 639
+    },
+    {
+      "code": "Chems",
+      "industry": "Chemicals",
+      "condition": "Calm-Up",
+      "mean": 0.3324671916010498,
+      "std": 0.6074428442581737,
+      "sharpe": 0.5473225913247329,
+      "n": 762
+    },
+    {
+      "code": "Chems",
+      "industry": "Chemicals",
+      "condition": "Calm-Down",
+      "mean": -0.3037526652452025,
+      "std": 0.5897254092820862,
+      "sharpe": -0.5150747457447726,
+      "n": 469
+    },
+    {
+      "code": "Chems",
+      "industry": "Chemicals",
+      "condition": "Volatile-Up",
+      "mean": 0.7513412563667232,
+      "std": 1.142709544343528,
+      "sharpe": 0.6575085156905373,
+      "n": 589
+    },
+    {
+      "code": "Chems",
+      "industry": "Chemicals",
+      "condition": "Volatile-Down",
+      "mean": -0.7477464788732393,
+      "std": 1.145763325066876,
+      "sharpe": -0.6526186189714135,
+      "n": 639
+    },
+    {
+      "code": "BusEq",
+      "industry": "Business Equipment",
+      "condition": "Calm-Up",
+      "mean": 0.6725196850393701,
+      "std": 0.6702965415544634,
+      "sharpe": 1.0033166566543086,
+      "n": 762
+    },
+    {
+      "code": "BusEq",
+      "industry": "Business Equipment",
+      "condition": "Calm-Down",
+      "mean": -0.4616631130063966,
+      "std": 0.660759894667798,
+      "sharpe": -0.6986851301538226,
+      "n": 469
+    },
+    {
+      "code": "BusEq",
+      "industry": "Business Equipment",
+      "condition": "Volatile-Up",
+      "mean": 1.3508319185059423,
+      "std": 1.413590432967327,
+      "sharpe": 0.9556034668898786,
+      "n": 589
+    },
+    {
+      "code": "BusEq",
+      "industry": "Business Equipment",
+      "condition": "Volatile-Down",
+      "mean": -1.345492957746479,
+      "std": 1.4382580567488552,
+      "sharpe": -0.9355017699590925,
+      "n": 639
+    },
+    {
+      "code": "Telcm",
+      "industry": "Telecom",
+      "condition": "Calm-Up",
+      "mean": 0.2806692913385827,
+      "std": 0.7309698332067932,
+      "sharpe": 0.3839683644771981,
+      "n": 762
+    },
+    {
+      "code": "Telcm",
+      "industry": "Telecom",
+      "condition": "Calm-Down",
+      "mean": -0.2191897654584222,
+      "std": 0.742849808402579,
+      "sharpe": -0.29506605908638106,
+      "n": 469
+    },
+    {
+      "code": "Telcm",
+      "industry": "Telecom",
+      "condition": "Volatile-Up",
+      "mean": 0.6883531409168081,
+      "std": 1.1504087579871571,
+      "sharpe": 0.5983552681928493,
+      "n": 589
+    },
+    {
+      "code": "Telcm",
+      "industry": "Telecom",
+      "condition": "Volatile-Down",
+      "mean": -0.731189358372457,
+      "std": 1.2654087870156758,
+      "sharpe": -0.5778285767217445,
+      "n": 639
+    },
+    {
+      "code": "Utils",
+      "industry": "Utilities",
+      "condition": "Calm-Up",
+      "mean": 0.20943569553805774,
+      "std": 0.7284590844913876,
+      "sharpe": 0.28750509122181706,
+      "n": 762
+    },
+    {
+      "code": "Utils",
+      "industry": "Utilities",
+      "condition": "Calm-Down",
+      "mean": -0.0922814498933902,
+      "std": 0.7412847746972099,
+      "sharpe": -0.12448852727493842,
+      "n": 469
+    },
+    {
+      "code": "Utils",
+      "industry": "Utilities",
+      "condition": "Volatile-Up",
+      "mean": 0.5972495755517826,
+      "std": 1.3604710720725555,
+      "sharpe": 0.4390020396699259,
+      "n": 589
+    },
+    {
+      "code": "Utils",
+      "industry": "Utilities",
+      "condition": "Volatile-Down",
+      "mean": -0.5572613458528952,
+      "std": 1.3822920106660401,
+      "sharpe": -0.4031429984062382,
+      "n": 639
+    },
+    {
+      "code": "Shops",
+      "industry": "Retail",
+      "condition": "Calm-Up",
+      "mean": 0.46426509186351705,
+      "std": 0.6051240231382591,
+      "sharpe": 0.7672230387677759,
+      "n": 762
+    },
+    {
+      "code": "Shops",
+      "industry": "Retail",
+      "condition": "Calm-Down",
+      "mean": -0.3253731343283581,
+      "std": 0.5221173602014225,
+      "sharpe": -0.6231800723937538,
+      "n": 469
+    },
+    {
+      "code": "Shops",
+      "industry": "Retail",
+      "condition": "Volatile-Up",
+      "mean": 0.9739558573853989,
+      "std": 1.1393121230349366,
+      "sharpe": 0.8548630684196915,
+      "n": 589
+    },
+    {
+      "code": "Shops",
+      "industry": "Retail",
+      "condition": "Volatile-Down",
+      "mean": -0.9774647887323944,
+      "std": 1.2334675317864632,
+      "sharpe": -0.7924527914542725,
+      "n": 639
+    },
+    {
+      "code": "Hlth",
+      "industry": "Healthcare",
+      "condition": "Calm-Up",
+      "mean": 0.35494750656167984,
+      "std": 0.6749684841041494,
+      "sharpe": 0.5258727109796588,
+      "n": 762
+    },
+    {
+      "code": "Hlth",
+      "industry": "Healthcare",
+      "condition": "Calm-Down",
+      "mean": -0.26217484008528785,
+      "std": 0.6850550256505274,
+      "sharpe": -0.38270625025533817,
+      "n": 469
+    },
+    {
+      "code": "Hlth",
+      "industry": "Healthcare",
+      "condition": "Volatile-Up",
+      "mean": 0.7505432937181664,
+      "std": 1.1154601763443737,
+      "sharpe": 0.6728553019058681,
+      "n": 589
+    },
+    {
+      "code": "Hlth",
+      "industry": "Healthcare",
+      "condition": "Volatile-Down",
+      "mean": -0.7438810641627543,
+      "std": 1.1449777036890052,
+      "sharpe": -0.6496904365613784,
+      "n": 639
+    },
+    {
+      "code": "Money",
+      "industry": "Finance",
+      "condition": "Calm-Up",
+      "mean": 0.4698556430446194,
+      "std": 0.7332120073536993,
+      "sharpe": 0.6408182603834015,
+      "n": 762
+    },
+    {
+      "code": "Money",
+      "industry": "Finance",
+      "condition": "Calm-Down",
+      "mean": -0.31247334754797446,
+      "std": 0.6515079991061047,
+      "sharpe": -0.4796155196508723,
+      "n": 469
+    },
+    {
+      "code": "Money",
+      "industry": "Finance",
+      "condition": "Volatile-Up",
+      "mean": 1.055127334465195,
+      "std": 1.4275929479073584,
+      "sharpe": 0.7390953674938341,
+      "n": 589
+    },
+    {
+      "code": "Money",
+      "industry": "Finance",
+      "condition": "Volatile-Down",
+      "mean": -1.0619092331768387,
+      "std": 1.4911238270547955,
+      "sharpe": -0.7121536212551017,
+      "n": 639
+    },
+    {
+      "code": "Other",
+      "industry": "Other",
+      "condition": "Calm-Up",
+      "mean": 0.4782808398950132,
+      "std": 0.5468959690107317,
+      "sharpe": 0.8745371459953619,
+      "n": 762
+    },
+    {
+      "code": "Other",
+      "industry": "Other",
+      "condition": "Calm-Down",
+      "mean": -0.3754371002132196,
+      "std": 0.47670708855517635,
+      "sharpe": -0.7875634938660341,
+      "n": 469
+    },
+    {
+      "code": "Other",
+      "industry": "Other",
+      "condition": "Volatile-Up",
+      "mean": 1.0266213921901528,
+      "std": 1.1529105261217265,
+      "sharpe": 0.8904605942350119,
+      "n": 589
+    },
+    {
+      "code": "Other",
+      "industry": "Other",
+      "condition": "Volatile-Down",
+      "mean": -1.040093896713615,
+      "std": 1.2623315210009354,
+      "sharpe": -0.8239467044987498,
+      "n": 639
+    }
+  ]
+}
