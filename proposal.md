@@ -97,35 +97,35 @@ Our project will include five connected interactive visualizations:
 
 ### **1. Temporal Line Chart:** Establish when market conditions occurred; provides a time-based filter.
 
-![Visualization 1 Sketch](visualization1.jpeg)
+![Visualization 1 Sketch](images/visualization1.jpeg)
 
 <br>
 <br>
 
 ### **2. Scatterplot:** Explain market conditions to non-finance users.
 
-![Visualization 2 Sketch](visualization2.jpeg)
+![Visualization 2 Sketch](images/visualization2.jpeg)
 
 <br>
 <br>
 
 ### **3. Heatmap:** Helps identify consistent industries across market conditions. 
 
-![Visualization 3 Sketch](visualization3.jpeg)
+![Visualization 3 Sketch](images/visualization3.jpeg)
 
 <br>
 <br>
 
 ### **4. Network:** Reveals relationships between industries across market conditions.
 
-![Visualization 4 Sketch](visualization4.jpeg)
+![Visualization 4 Sketch](images/visualization4.jpeg)
 
 <br>
 <br>
 
 ### **5. Multi-series Line Chart:** Shows heatmap averages over time for selected industries.
 
-![Visualization 5 Sketch](visualization5.jpeg)
+![Visualization 5 Sketch](images/visualization5.jpeg)
 
 <br>
 <br>
