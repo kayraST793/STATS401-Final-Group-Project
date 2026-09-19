@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STATS 401 — Industry Performance Across Market Conditions (Whiteboard)</title>
+
+    <!-- self-contained whiteboard stylesheet (merged from ../css/style.css) -->
+    <link rel="stylesheet" href="css/whiteboard.css">
+</head>
+
+<body class="wide">
+
+<header id="top">
+    <h1>Industry Performance Across Market Conditions</h1>
+    <p class="subtitle">A whiteboard scaffold — five linked views on how U.S. industries behave when the market is calm or volatile, rising or falling.</p>
+</header>
+
+<nav class="story-nav">
+    <a href="#viz1">1 · Timeline</a>
+    <a href="#viz2">2 · Conditions</a>
+    <a href="#viz3">3 · Heatmap</a>
+    <a href="#viz4">4 · Network</a>
+    <a href="#viz5">5 · Comparison</a>
+    <a href="#data">Data</a>
+</nav>
+
+<div id="error"></div>
+
+<main>
+
+    <section id="intro" class="card">
+        <h2>The question</h2>
+        <p><strong>How does industry performance differ across different U.S. stock-market conditions?</strong>
+           We define four conditions from two signals — the market's daily direction (S&amp;P 500 up/down)
+           and how nervous it is (VIX calm/volatile, split at the median). The five views below move from
+           <em>context → overview → pattern → relationship → deep dive</em>.</p>
+        <div id="condition-legend" class="cond-legend"></div>
+    </section>
+
+    <section id="viz1">
+        <h2>1 · Market-Conditions Timeline <span class="tag-when">when</span></h2>
+        <p class="chart-note">S&amp;P 500 (line, left) and VIX (line, right) over ~10 years. The ribbon beneath colours each trading day by its market condition — establishing <em>when</em> each regime occurred.</p>
+        <div id="timeline"></div>
+    </section>
+
+    <section id="viz2">
+        <h2>2 · What a "condition" looks like <span class="tag-when">overview</span></h2>
+        <p class="chart-note">Every trading day plotted by S&amp;P return (x) vs VIX (y), coloured by condition. The horizontal line is the VIX median (the Calm/Volatile boundary); the vertical line is 0% return. The shaded band is the <em>typical</em> VIX range (15–20), shown for context only.</p>
+        <div id="scatter"></div>
+    </section>
+
+    <section id="viz3">
+        <h2>3 · Industry performance heatmap <span class="tag-when">pattern</span></h2>
+        <p class="chart-note">Average daily return (%) for each of the 12 industries across the four conditions. Green = gains, red = losses. This is the first real pattern: which industries hold up when the market turns.</p>
+        <div id="heatmap-controls"></div>
+        <div id="heatmap"></div>
+    </section>
+
+    <section id="viz4">
+        <h2>4 · Industry similarity network <span class="tag-when">relationship</span></h2>
+        <p class="chart-note">Industries linked when their returns are correlated above a threshold. Switch the condition and watch the structure change — a first look at whether industries move together more in crises.</p>
+        <div id="network-controls"></div>
+        <div id="network"></div>
+    </section>
+
+    <section id="viz5">
+        <h2>5 · Interactive industry comparison <span class="tag-when">deep dive</span></h2>
+        <p class="chart-note">Cumulative growth of $1 invested per industry over the full window. Toggle industries to compare defensive vs cyclical trajectories through real episodes.</p>
+        <div id="comparison-controls"></div>
+        <div id="comparison"></div>
+    </section>
+
+    <section id="data" class="card">
+        <h2>Data</h2>
+        <div id="meta-panel" class="dataset-meta"></div>
+        <p class="caveat">Scaffold build — all numbers are live from <code>data/build_data.py</code>. See <code>docs/data-spec.md</code> for the locked definitions.</p>
+    </section>
+
+    <a class="back" href="#top">↑ Back to top of page</a>
+</main>
+
+<div id="tooltip" class="tooltip"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="js/config.js"></script>
+<script src="js/viz1_timeline.js"></script>
+<script src="js/viz2_scatter.js"></script>
+<script src="js/viz3_heatmap.js"></script>
+<script src="js/viz4_network.js"></script>
+<script src="js/viz5_comparison.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+
+</html>
