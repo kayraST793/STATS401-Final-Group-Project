@@ -78,6 +78,29 @@
         <p class="caveat">Scaffold build — all numbers are live from <code>data/build_data.py</code>. See <code>docs/data-spec.md</code> for the locked definitions.</p>
     </section>
 
+    <h2>Interaction/Animation Plan</h2>
+
+    <h3>Vis #1: Market-Conditions Timeline</h3>
+    <p>We plan to make an animation tracing through time for this temporal visualization. A user can brush along the x-axis to highlight a date range, affecting the other four visualizations.</p>
+
+    <h3>Vis #2: Market-Conditions Scatterplot</h3>
+    <p>We will make a four-way animation to see how the four conditions diverge. A user can hover over specific points/outliers for details and select a condition, affecting and filtering visualizations 3&ndash;5.</p>
+
+    <h3>Vis #3: Industry Performance Heatmap</h3>
+    <p>A user can reorder industries by performance of whichever condition is currently selected from Vis #2. They can toggle between average return and risk-adjusted return (and hover for more details on what these mean). Industries selected in Vis #1 will highlight the corresponding rows, and conditions selected from Vis #2 will highlight the corresponding columns. As animation, the cells transition smoothly when the selected time range changes.</p>
+
+    <h3>Vis #4: Industry Similarity Network</h3>
+    <p>A chord diagram where if a user clicks an industry, all its chords/edges are highlighted and the others are faded. Changing the pre-selected condition and time range re-computes the correlation and changes the animation showing how the relationships change over time. A user can use a threshold slider to change the minimum correlation required to draw a link.</p>
+
+    <h3>Vis #5: Interactive Industry Comparison</h3>
+    <p>A user can select specific industries with checkboxes and compare their cumulative performance over time. Clicking an industry in Vis #3 or Vis #4 will also add or highlight that industry here. A user can zoom into a time period and hover for exact values across all selected industries at once, and the market-condition ribbon from Vis #1 will run in the background so users can see how the selected industries behaved as overall conditions changed. This serves as the deeper exploration after the summary views, letting a user check whether an industry's average performance came from steady weakness or from a single sharp drop.</p>
+
+    <h2>Evaluation Plan</h2>
+
+    <p>Our connected visualizations aim to help users, even those without finance knowledge, to be able to understand what the four market conditions mean and evaluate industry differences and relationships over varying time periods and market conditions. They can spot which industries correlate more tightly under stress or no stress. Our interactive features help users investigate specific time ranges, rank industries, isolate conditions, and see how industries shift over time with the animations.</p>
+
+    <p>How we evaluate and what data/feedback we get would be from testing with people who don't have a finance background. We could provide guiding questions to help people know what to look for and how to navigate and explore the visualizations. We can give them tasks like "what industries seem tightly connected?", like in the readings we've done, and calculate their success rate and note what they get confused by and what their overall feedback and suggestions are. According to the feedback, we adjust where our problem lies, whether our visual channels, interactions, limited explanation, or data we're missing, etc.</p>
+
     <a class="back" href="#top">↑ Back to top of page</a>
 </main>
 
