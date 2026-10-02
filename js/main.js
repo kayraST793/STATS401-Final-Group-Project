@@ -122,12 +122,15 @@
     );
 
     function clearFocus() {
-        dashboard.classList.remove("has-focus");
+      dashboard.classList.remove("has-focus");
 
-        cards.forEach(card => {
-            card.classList.remove("is-focused");
-            card.classList.remove("is-mini");
-        });
+      cards.forEach(card => {
+        card.classList.remove("is-focused");
+        card.classList.remove("is-mini");
+
+        card.style.gridColumn = "";
+        card.style.gridRow = "";
+      });
     }
 
     function focusCard(card) {
@@ -143,11 +146,27 @@
         dashboard.classList.add("has-focus");
         card.classList.add("is-focused");
 
-        cards.forEach(otherCard => {
-            if (otherCard !== card) {
-                otherCard.classList.add("is-mini");
-            }
-        });
+       let miniIndex = 0;
+
+       cards.forEach(otherCard => {
+         if (otherCard === card) {
+           return;
+         }
+
+         otherCard.classList.add("is-mini");
+
+         const positions = [
+             { column: 2, row: 1 },
+           { column: 3, row: 1 },
+           { column: 2, row: 2 },
+           { column: 3, row: 2 }
+         ];
+
+         const position = positions[miniIndex];
+         otherCard.style.gridColumn = position.column;
+         otherCard.style.gridRow = position.row;
+         miniIndex++;
+       });
 
         /*
          Move the focused chart into view without an abrupt jump.
