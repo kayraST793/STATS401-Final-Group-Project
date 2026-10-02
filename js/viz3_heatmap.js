@@ -61,6 +61,12 @@ WB.drawHeatmap = function (state) {
       .attr("x", (d) => x(d.condition)).attr("y", (d) => yb(d.industry))
       .attr("width", x.bandwidth()).attr("height", yb.bandwidth())
       .attr("fill", (d) => (d[metric] == null ? "#eee" : color(d[metric])))
+        .style("cursor", "pointer")
+        .on("click", function (event, d) {
+          WB.setCondition(d.condition);
+          WB.toggleIndustry(d.industry);
+        })
+
       .on("mouseover", (event, d) => WB.showTip(
         `<b>${d.industry}</b><br>${d.condition}<br>avg ${fmt(d.mean)}% · σ ${fmt(d.std)}<br>` +
           `risk-adj ${fmt(d.sharpe)} · n=${d.n}`, event))
@@ -75,5 +81,37 @@ WB.drawHeatmap = function (state) {
       .text((d) => (d[metric] == null ? "" : fmt(d[metric])));
   }
   const fmt = (v) => (v == null ? "–" : d3.format(".2f")(v));
+
+  WB.events.on("conditionchange.heatmap", function (condition) {
+    cellG.selectAll(".cellwrap")
+        .attr("opacity", d =>
+            condition === "All" || d.condition === condition
+                ? 1
+                : 0.18
+        );
+  });
+
+  WB.events.on("industrychange.heatmap", function (selected) {
+    cellG.selectAll(".cellwrap")
+        .attr("opacity", d => {
+          const condition = WB.state.filters.condition;
+          const conditionOK =
+              condition === "All" ||
+              d.condition === condition;
+
+          const industryOK =
+              selected.size === 0 ||
+              selected.has(d.industry);
+
+          return conditionOK && industryOK ? 1 : 0.15;
+        });
+  });
+
+  WB.events.on("reset.heatmap", function () {
+    cellG.selectAll(".cellwrap")
+        .attr("opacity", 1);
+  });
+
   render();
+
 };
