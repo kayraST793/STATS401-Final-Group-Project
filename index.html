@@ -39,38 +39,201 @@
         <div id="condition-legend" class="cond-legend"></div>
     </section>
 
-    <section id="viz1">
-        <h2>1 · Market-Conditions Timeline <span class="tag-when">when</span></h2>
-        <p class="chart-note">S&amp;P 500 (line, left) and VIX (line, right) over ~10 years. The ribbon beneath colours each trading day by its market condition — establishing <em>when</em> each regime occurred.</p>
-        <div id="timeline"></div>
-    </section>
+<!--    <section id="viz1">-->
+<!--        <h2>1 · Market-Conditions Timeline <span class="tag-when">when</span></h2>-->
+<!--        <p class="chart-note">S&amp;P 500 (line, left) and VIX (line, right) over ~10 years. The ribbon beneath colours each trading day by its market condition — establishing <em>when</em> each regime occurred.</p>-->
+<!--        <div id="timeline"></div>-->
+<!--    </section>-->
 
-    <section id="viz2">
-        <h2>2 · What a "condition" looks like <span class="tag-when">overview</span></h2>
-        <p class="chart-note">Every trading day plotted by S&amp;P return (x) vs VIX (y), coloured by condition. The horizontal line is the VIX median (the Calm/Volatile boundary); the vertical line is 0% return. The shaded band is the <em>typical</em> VIX range (15–20), shown for context only.</p>
-        <div id="scatter"></div>
-    </section>
+<!--    <section id="viz2">-->
+<!--        <h2>2 · What a "condition" looks like <span class="tag-when">overview</span></h2>-->
+<!--        <p class="chart-note">Every trading day plotted by S&amp;P return (x) vs VIX (y), coloured by condition. The horizontal line is the VIX median (the Calm/Volatile boundary); the vertical line is 0% return. The shaded band is the <em>typical</em> VIX range (15–20), shown for context only.</p>-->
+<!--        <div id="scatter"></div>-->
+<!--    </section>-->
 
-    <section id="viz3">
-        <h2>3 · Industry performance heatmap <span class="tag-when">pattern</span></h2>
-        <p class="chart-note">Average daily return (%) for each of the 12 industries across the four conditions. Green = gains, red = losses. This is the first real pattern: which industries hold up when the market turns.</p>
-        <div id="heatmap-controls"></div>
-        <div id="heatmap"></div>
-    </section>
+<!--    <section id="viz3">-->
+<!--        <h2>3 · Industry performance heatmap <span class="tag-when">pattern</span></h2>-->
+<!--        <p class="chart-note">Average daily return (%) for each of the 12 industries across the four conditions. Green = gains, red = losses. This is the first real pattern: which industries hold up when the market turns.</p>-->
+<!--        <div id="heatmap-controls"></div>-->
+<!--        <div id="heatmap"></div>-->
+<!--    </section>-->
 
-    <section id="viz4">
-        <h2>4 · Industry similarity network <span class="tag-when">relationship</span></h2>
-        <p class="chart-note">Industries linked when their returns are correlated above a threshold. Switch the condition and watch the structure change — a first look at whether industries move together more in crises.</p>
-        <div id="network-controls"></div>
-        <div id="network"></div>
-    </section>
+<!--    <section id="viz4">-->
+<!--        <h2>4 · Industry similarity network <span class="tag-when">relationship</span></h2>-->
+<!--        <p class="chart-note">Industries linked when their returns are correlated above a threshold. Switch the condition and watch the structure change — a first look at whether industries move together more in crises.</p>-->
+<!--        <div id="network-controls"></div>-->
+<!--        <div id="network"></div>-->
+<!--    </section>-->
 
-    <section id="viz5">
-        <h2>5 · Interactive industry comparison <span class="tag-when">deep dive</span></h2>
-        <p class="chart-note">Cumulative growth of $1 invested per industry over the full window. Toggle industries to compare defensive vs cyclical trajectories through real episodes.</p>
-        <div id="comparison-controls"></div>
-        <div id="comparison"></div>
-    </section>
+<!--    <section id="viz5">-->
+<!--        <h2>5 · Interactive industry comparison <span class="tag-when">deep dive</span></h2>-->
+<!--        <p class="chart-note">Cumulative growth of $1 invested per industry over the full window. Toggle industries to compare defensive vs cyclical trajectories through real episodes.</p>-->
+<!--        <div id="comparison-controls"></div>-->
+<!--        <div id="comparison"></div>-->
+<!--    </section>-->
+
+    <section class="dashboard-section">
+
+    <div class="dashboard-heading">
+        <div>
+            <span class="eyebrow">Interactive market explorer</span>
+            <h2>Explore the market from five connected views</h2>
+            <p>
+                Every chart is linked. Filter a condition, industry, or time period
+                and watch the entire dashboard respond.
+            </p>
+        </div>
+
+        <button id="reset-dashboard" class="reset-btn" type="button">
+            Reset filters
+        </button>
+    </div>
+
+    <div id="dashboard-grid" class="dashboard-grid">
+
+        <!-- ==================================================
+             1. TIMELINE
+             ================================================== -->
+        <section id="viz1" class="viz-card viz-card--timeline" data-viz="timeline">
+
+            <div class="viz-card-header">
+                <div class="viz-title-group">
+                    <span class="viz-step">01 · CONTEXT</span>
+                    <h3>Market conditions over time</h3>
+                    <p>
+                        S&amp;P 500, VIX and market regimes across the full period.
+                    </p>
+                </div>
+
+                <button class="focus-btn" type="button">
+                    <span class="focus-open">Expand ↗</span>
+                    <span class="focus-close">Overview ×</span>
+                </button>
+            </div>
+
+            <div class="viz-content">
+                <div id="timeline"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             2. SCATTER
+             ================================================== -->
+        <section id="viz2" class="viz-card" data-viz="scatter">
+
+            <div class="viz-card-header">
+                <div class="viz-title-group">
+                    <span class="viz-step">02 · OVERVIEW</span>
+                    <h3>What does a market condition look like?</h3>
+                    <p>
+                        Daily return versus VIX, coloured by market regime.
+                    </p>
+                </div>
+
+                <button class="focus-btn" type="button">
+                    <span class="focus-open">Expand ↗</span>
+                    <span class="focus-close">Overview ×</span>
+                </button>
+            </div>
+
+            <div class="viz-content">
+                <div id="scatter"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             3. HEATMAP
+             ================================================== -->
+        <section id="viz3" class="viz-card" data-viz="heatmap">
+
+            <div class="viz-card-header">
+                <div class="viz-title-group">
+                    <span class="viz-step">03 · PATTERN</span>
+                    <h3>How do industries respond?</h3>
+                    <p>
+                        Compare average and risk-adjusted performance by regime.
+                    </p>
+                </div>
+
+                <button class="focus-btn" type="button">
+                    <span class="focus-open">Expand ↗</span>
+                    <span class="focus-close">Overview ×</span>
+                </button>
+            </div>
+
+            <div id="heatmap-controls"></div>
+
+            <div class="viz-content">
+                <div id="heatmap"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             4. NETWORK
+             ================================================== -->
+        <section id="viz4" class="viz-card" data-viz="network">
+
+            <div class="viz-card-header">
+                <div class="viz-title-group">
+                    <span class="viz-step">04 · RELATIONSHIPS</span>
+                    <h3>Which industries move together?</h3>
+                    <p>
+                        Explore how correlation structure changes by regime.
+                    </p>
+                </div>
+
+                <button class="focus-btn" type="button">
+                    <span class="focus-open">Expand ↗</span>
+                    <span class="focus-close">Overview ×</span>
+                </button>
+            </div>
+
+            <div id="network-controls"></div>
+
+            <div class="viz-content">
+                <div id="network"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             5. COMPARISON
+             ================================================== -->
+        <section id="viz5" class="viz-card viz-card--comparison" data-viz="comparison">
+
+            <div class="viz-card-header">
+                <div class="viz-title-group">
+                    <span class="viz-step">05 · DEEP DIVE</span>
+                    <h3>What does this mean over time?</h3>
+                    <p>
+                        Compare cumulative industry performance through changing regimes.
+                    </p>
+                </div>
+
+                <button class="focus-btn" type="button">
+                    <span class="focus-open">Expand ↗</span>
+                    <span class="focus-close">Overview ×</span>
+                </button>
+            </div>
+
+            <div id="comparison-controls"></div>
+
+            <div class="viz-content">
+                <div id="comparison"></div>
+            </div>
+
+        </section>
+
+    </div>
+
+</section>
 
     <section id="data" class="card">
         <h2>Data</h2>

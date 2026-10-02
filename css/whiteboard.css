@@ -327,3 +327,543 @@ section.card {
     height: 10px;
     border-radius: 50%;
 }
+
+/* ============================================================
+   DESIGN SYSTEM
+   ============================================================ */
+
+:root {
+    --page-bg: #f4f7fb;
+    --surface: #ffffff;
+    --surface-soft: #f8fafc;
+
+    --text: #152033;
+    --text-secondary: #536176;
+    --text-muted: #8793a6;
+
+    --border: #dfe6ee;
+    --border-strong: #c5d0dc;
+
+    --accent: #315f85;
+    --accent-soft: #e8f0f6;
+
+    --shadow-sm:
+        0 1px 2px rgba(15, 23, 42, 0.04),
+        0 4px 12px rgba(15, 23, 42, 0.03);
+
+    --shadow-lg:
+        0 20px 50px rgba(15, 23, 42, 0.12);
+}
+
+
+/* ============================================================
+   PAGE
+   ============================================================ */
+
+body {
+    margin: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fafcff 0px,
+            var(--page-bg) 500px
+        );
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+/* ============================================================
+   DASHBOARD SECTION
+   ============================================================ */
+
+.dashboard-section {
+    width: min(1500px, calc(100% - 40px));
+    margin: 32px auto 70px;
+}
+
+.dashboard-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    gap: 30px;
+    margin-bottom: 22px;
+}
+
+.dashboard-heading h2 {
+    margin: 5px 0 7px;
+
+    color: var(--text);
+
+    font-size: clamp(24px, 2.5vw, 36px);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+}
+
+.dashboard-heading p {
+    max-width: 720px;
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    line-height: 1.6;
+}
+
+.eyebrow {
+    color: var(--accent);
+
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+
+/* ============================================================
+   DEFAULT 5-VISUALIZATION GRID
+   ============================================================ */
+
+.dashboard-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 16px;
+
+    align-items: stretch;
+}
+
+
+/*
+ Timeline and comparison are wider because their temporal
+ structure benefits from horizontal space.
+*/
+
+.viz-card--timeline,
+.viz-card--comparison {
+    grid-column: 1 / -1;
+}
+
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+
+.viz-card {
+    position: relative;
+
+    min-width: 0;
+    overflow: hidden;
+
+    padding: 18px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow: var(--shadow-sm);
+
+    transition:
+        box-shadow 300ms ease,
+        border-color 300ms ease,
+        transform 300ms ease,
+        opacity 300ms ease;
+}
+
+.viz-card:hover {
+    border-color: var(--border-strong);
+
+    box-shadow:
+        0 8px 24px rgba(15, 23, 42, 0.07);
+}
+
+
+/* ============================================================
+   CARD HEADER
+   ============================================================ */
+
+.viz-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.viz-title-group {
+    min-width: 0;
+}
+
+.viz-step {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--accent);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.12em;
+}
+
+.viz-card h3 {
+    margin: 0 0 4px;
+
+    color: var(--text);
+
+    font-size: 17px;
+    font-weight: 700;
+
+    letter-spacing: -0.02em;
+}
+
+.viz-card-header p {
+    max-width: 600px;
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+
+/* ============================================================
+   FOCUS BUTTON
+   ============================================================ */
+
+.focus-btn {
+    flex: 0 0 auto;
+
+    padding: 7px 10px;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 180ms ease,
+        color 180ms ease,
+        border-color 180ms ease,
+        transform 180ms ease;
+}
+
+.focus-btn:hover {
+    background: var(--text);
+    border-color: var(--text);
+    color: #ffffff;
+
+    transform: translateY(-1px);
+}
+
+.focus-close {
+    display: none;
+}
+
+
+/* ============================================================
+   RESET BUTTON
+   ============================================================ */
+
+.reset-btn {
+    flex: 0 0 auto;
+
+    padding: 10px 16px;
+
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+
+    background: #ffffff;
+    color: var(--text);
+
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 180ms ease,
+        color 180ms ease;
+}
+
+.reset-btn:hover {
+    background: var(--text);
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   SVG RESPONSIVENESS
+   ============================================================ */
+
+.viz-content {
+    width: 100%;
+    min-width: 0;
+}
+
+.viz-card .wb-svg {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+
+.controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin: 5px 0 10px;
+
+    color: var(--text-secondary);
+
+    font-size: 11px;
+}
+
+.controls button {
+    padding: 5px 9px;
+
+    border: 1px solid var(--border);
+    border-radius: 7px;
+
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+
+    font: inherit;
+
+    cursor: pointer;
+
+    transition:
+        background 160ms ease,
+        color 160ms ease,
+        border-color 160ms ease;
+}
+
+.controls button:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+}
+
+.controls button.active {
+    background: var(--text);
+    border-color: var(--text);
+
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   FOCUS MODE
+   ============================================================ */
+
+.dashboard-grid.has-focus {
+    grid-template-columns:
+        minmax(0, 3.3fr)
+        minmax(220px, 1fr);
+
+    align-items: start;
+}
+
+
+/* Large visualization */
+
+.dashboard-grid.has-focus .viz-card.is-focused {
+    grid-column: 1;
+    grid-row: 1 / span 4;
+
+    min-height: 690px;
+
+    padding: 24px;
+
+    border-color: #a9b8c8;
+
+    box-shadow: var(--shadow-lg);
+}
+
+
+/* Show Overview button */
+
+.dashboard-grid.has-focus .is-focused .focus-open {
+    display: none;
+}
+
+.dashboard-grid.has-focus .is-focused .focus-close {
+    display: inline;
+}
+
+
+/* All non-focused cards become the live side rail */
+
+.dashboard-grid.has-focus .viz-card.is-mini {
+    grid-column: 2;
+
+    padding: 11px;
+
+    opacity: 0.9;
+}
+
+
+/*
+ Remove default full-width behavior from timeline/comparison
+ while focus mode is active.
+*/
+
+.dashboard-grid.has-focus .viz-card--timeline,
+.dashboard-grid.has-focus .viz-card--comparison {
+    grid-column: auto;
+}
+
+.dashboard-grid.has-focus .viz-card.is-focused {
+    grid-column: 1;
+}
+
+
+/* Mini typography */
+
+.dashboard-grid.has-focus .is-mini .viz-step {
+    font-size: 8px;
+}
+
+.dashboard-grid.has-focus .is-mini h3 {
+    font-size: 12px;
+}
+
+.dashboard-grid.has-focus .is-mini .viz-card-header p {
+    display: none;
+}
+
+.dashboard-grid.has-focus .is-mini .viz-card-header {
+    margin-bottom: 5px;
+}
+
+
+/* Mini controls aren't needed, but visualization remains live */
+
+.dashboard-grid.has-focus .is-mini .controls {
+    display: none;
+}
+
+.dashboard-grid.has-focus .is-mini .focus-btn {
+    padding: 4px 6px;
+
+    font-size: 9px;
+}
+
+
+/* ============================================================
+   CHART POLISH
+   ============================================================ */
+
+.grid line {
+    stroke: #e5eaf0;
+    stroke-opacity: 0.8;
+}
+
+.grid path {
+    stroke: #ccd5df;
+}
+
+.axis-title {
+    fill: #64748b;
+
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.ref-line {
+    stroke: #94a3b8;
+    stroke-dasharray: 4 4;
+}
+
+.hm-cell {
+    stroke: #ffffff;
+    stroke-width: 1.5px;
+
+    transition:
+        stroke 160ms ease,
+        stroke-width 160ms ease,
+        opacity 160ms ease;
+}
+
+.hm-cell:hover {
+    stroke: #172033;
+    stroke-width: 3px;
+}
+
+.hm-value {
+    pointer-events: none;
+
+    font-size: 10px;
+    font-weight: 650;
+}
+
+.net-link {
+    transition:
+        opacity 180ms ease,
+        stroke-width 180ms ease;
+}
+
+.net-node {
+    transition:
+        opacity 180ms ease,
+        stroke-width 180ms ease;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .dashboard-grid,
+    .dashboard-grid.has-focus {
+        grid-template-columns: 1fr;
+    }
+
+    .viz-card,
+    .viz-card--timeline,
+    .viz-card--comparison,
+    .dashboard-grid.has-focus .viz-card.is-focused,
+    .dashboard-grid.has-focus .viz-card.is-mini {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .dashboard-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
