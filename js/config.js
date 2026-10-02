@@ -17,10 +17,10 @@ WB.config = {
   // hue encodes trend (green=up, red=down); lightness encodes volatility (light=calm, dark=volatile)
   conditionOrder: ["Calm-Up", "Calm-Down", "Volatile-Up", "Volatile-Down"],
   conditionColor: {
-    "Calm-Up": "#8fd19e",
-    "Volatile-Up": "#1a7a3c",
-    "Calm-Down": "#f4a582",
-    "Volatile-Down": "#b42318",
+    "Calm-Up": "#8CCFA8",
+    "Volatile-Up": "#25804A",
+    "Calm-Down": "#E9A39D",
+    "Volatile-Down": "#B33A3F",
   },
 
   // scatterplot educational reference band (VIX p33-p67); not a classifier

@@ -25,11 +25,11 @@ WB.drawTimeline = function (state) {
   g.append("text").attr("class", "axis-title").attr("x", iw + 8).attr("y", -4).text("VIX");
 
   // S&P line
-  g.append("path").datum(panel).attr("fill", "none").attr("stroke", "#1f3864").attr("stroke-width", 1.4)
+  g.append("path").datum(panel).attr("fill", "none").attr("stroke", "#315f85").attr("stroke-width", 1.8)
     .attr("d", d3.line().x((d) => x(d.date)).y((d) => ySp(d.sp500)));
   // VIX line
-  g.append("path").datum(panel).attr("fill", "none").attr("stroke", "#c77d18")
-    .attr("stroke-width", 1).attr("opacity", 0.75)
+  g.append("path").datum(panel).attr("fill", "none").attr("stroke", "#d18a36")
+    .attr("stroke-width", 1.25).attr("opacity", 0.8)
     .attr("d", d3.line().x((d) => x(d.date)).y((d) => yVix(d.vix)));
 
   // condition ribbon (compress contiguous same-condition runs into segments)

@@ -49,7 +49,18 @@ WB.drawHeatmap = function (state) {
   function render() {
     const vals = records.map((r) => r[metric]).filter((v) => v != null);
     const lim = d3.max(vals.map(Math.abs)) || 1;
-    const color = d3.scaleDiverging(d3.interpolateRdYlGn).domain([-lim, 0, lim]);
+    const color = d3
+        .scaleDiverging()
+        .domain([-lim, 0, lim])
+        .interpolator(
+            d3.interpolateRgbBasis([
+                "#b33a3f",
+                "#efb4b0",
+                "#f7f8fa",
+                "#abd8ba",
+                "#25804a"
+            ])
+        );
 
     const cells = cellG.selectAll("g.cellwrap").data(records, (d) => d.industry + d.condition);
     const enter = cells.enter().append("g").attr("class", "cellwrap");
