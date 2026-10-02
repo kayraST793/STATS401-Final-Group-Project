@@ -68,6 +68,9 @@
           d3.select(sel).append("p").attr("class", "caveat").text(`(${fn} error: ${e.message})`);
         }
       });
+
+      setupDashboardUI();
+
     })
     .catch((err) => {
       console.error(err);
@@ -108,6 +111,88 @@
         "(Kenneth R. French Data Library)"
     );
   }
+
+  function setupDashboardUI() {
+    const dashboard = document.getElementById("dashboard-grid");
+
+    if (!dashboard) return;
+
+    const cards = Array.from(
+        dashboard.querySelectorAll(".viz-card")
+    );
+
+    function clearFocus() {
+        dashboard.classList.remove("has-focus");
+
+        cards.forEach(card => {
+            card.classList.remove("is-focused");
+            card.classList.remove("is-mini");
+        });
+    }
+
+    function focusCard(card) {
+        const alreadyFocused =
+            card.classList.contains("is-focused");
+
+        clearFocus();
+
+        if (alreadyFocused) {
+            return;
+        }
+
+        dashboard.classList.add("has-focus");
+        card.classList.add("is-focused");
+
+        cards.forEach(otherCard => {
+            if (otherCard !== card) {
+                otherCard.classList.add("is-mini");
+            }
+        });
+
+        /*
+         Move the focused chart into view without an abrupt jump.
+        */
+        card.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+
+    cards.forEach(card => {
+        const button = card.querySelector(".focus-btn");
+
+        if (!button) return;
+
+        button.addEventListener("click", event => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            focusCard(card);
+        });
+    });
+
+    /*
+     Reset only resets filters.
+     It does not leave focus mode, which avoids surprising the user.
+    */
+    const resetButton =
+        document.getElementById("reset-dashboard");
+
+    if (resetButton) {
+        resetButton.addEventListener("click", () => {
+            WB.resetDashboard();
+        });
+    }
+
+    /*
+     Escape is a convenient way to leave focus mode.
+    */
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            clearFocus();
+        }
+    });
+}
 
 // ============================================================
 // SHARED DASHBOARD EVENTS
