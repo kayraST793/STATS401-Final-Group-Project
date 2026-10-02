@@ -688,56 +688,53 @@ body {
    FOCUS MODE
    ============================================================ */
 
+/*
+   Focus layout:
+   large chart on the left,
+   four live mini charts in a compact 2 x 2 grid on the right.
+*/
+
 .dashboard-grid.has-focus {
+    display: grid;
+
     grid-template-columns:
-        minmax(0, 3.3fr)
-        minmax(220px, 1fr);
+        minmax(0, 2.25fr)
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    grid-auto-flow: row;
+    grid-auto-rows: auto;
+
+    gap: 12px;
 
     align-items: start;
 }
 
 
-/* Large visualization */
+/* ============================================================
+   FOCUSED CARD
+   ============================================================ */
 
 .dashboard-grid.has-focus .viz-card.is-focused {
     grid-column: 1;
-    grid-row: 1 / span 4;
+    grid-row: 1 / span 2;
 
-    min-height: 690px;
+    min-height: 0;
+    height: fit-content;
 
-    padding: 24px;
+    padding: 22px;
 
     border-color: #a9b8c8;
 
-    box-shadow: var(--shadow-lg);
-}
-
-
-/* Show Overview button */
-
-.dashboard-grid.has-focus .is-focused .focus-open {
-    display: none;
-}
-
-.dashboard-grid.has-focus .is-focused .focus-close {
-    display: inline;
-}
-
-
-/* All non-focused cards become the live side rail */
-
-.dashboard-grid.has-focus .viz-card.is-mini {
-    grid-column: 2;
-
-    padding: 11px;
-
-    opacity: 0.9;
+    box-shadow:
+        0 16px 40px rgba(15, 23, 42, 0.10);
 }
 
 
 /*
- Remove default full-width behavior from timeline/comparison
- while focus mode is active.
+   IMPORTANT:
+   cancel the default full-width timeline/comparison rules
+   while focus mode is active.
 */
 
 .dashboard-grid.has-focus .viz-card--timeline,
@@ -750,35 +747,211 @@ body {
 }
 
 
-/* Mini typography */
+/* ============================================================
+   MINI CARDS
+   ============================================================ */
+
+.dashboard-grid.has-focus .viz-card.is-mini {
+    min-width: 0;
+
+    padding: 10px;
+
+    opacity: 0.94;
+
+    border-radius: 13px;
+
+    box-shadow:
+        0 3px 10px rgba(15, 23, 42, 0.05);
+}
+
+
+/*
+   Put the four remaining charts into a compact 2 x 2 grid.
+*/
+
+/*.dashboard-grid.has-focus .viz-card.is-mini:nth-of-type(1) {*/
+/*    grid-column: 2;*/
+/*    grid-row: 1;*/
+/*}*/
+
+/*.dashboard-grid.has-focus .viz-card.is-mini:nth-of-type(2) {*/
+/*    grid-column: 3;*/
+/*    grid-row: 1;*/
+/*}*/
+
+/*.dashboard-grid.has-focus .viz-card.is-mini:nth-of-type(3) {*/
+/*    grid-column: 2;*/
+/*    grid-row: 2;*/
+/*}*/
+
+/*.dashboard-grid.has-focus .viz-card.is-mini:nth-of-type(4) {*/
+/*    grid-column: 3;*/
+/*    grid-row: 2;*/
+/*}*/
+
+/*.dashboard-grid.has-focus .viz-card.is-mini:nth-of-type(5) {*/
+/*    grid-column: 2;*/
+/*    grid-row: 2;*/
+/*}*/
+
+.dashboard-grid.has-focus .viz-card.is-mini {
+    grid-column: auto;
+    grid-row: auto;
+}
+
+
+/* ============================================================
+   MINI CARD HEADERS
+   ============================================================ */
+
+.dashboard-grid.has-focus .is-mini .viz-card-header {
+    margin-bottom: 6px;
+    gap: 5px;
+}
 
 .dashboard-grid.has-focus .is-mini .viz-step {
-    font-size: 8px;
+    margin-bottom: 2px;
+
+    font-size: 7px;
+    letter-spacing: 0.08em;
 }
 
 .dashboard-grid.has-focus .is-mini h3 {
-    font-size: 12px;
+    margin: 0;
+
+    font-size: 11px;
+    line-height: 1.2;
 }
 
 .dashboard-grid.has-focus .is-mini .viz-card-header p {
     display: none;
 }
 
-.dashboard-grid.has-focus .is-mini .viz-card-header {
-    margin-bottom: 5px;
+
+/* ============================================================
+   MINI BUTTON
+   ============================================================ */
+
+.dashboard-grid.has-focus .is-mini .focus-btn {
+    padding: 4px 6px;
+
+    font-size: 8px;
+    white-space: nowrap;
 }
 
 
-/* Mini controls aren't needed, but visualization remains live */
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+
+/*
+   Controls are hidden only in the mini previews.
+   They remain available in the focused visualization.
+*/
 
 .dashboard-grid.has-focus .is-mini .controls {
     display: none;
 }
 
-.dashboard-grid.has-focus .is-mini .focus-btn {
-    padding: 4px 6px;
 
-    font-size: 9px;
+/* ============================================================
+   SVG SIZE
+   ============================================================ */
+
+.dashboard-grid.has-focus .viz-card .wb-svg {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+
+    height: auto;
+}
+
+
+/* ============================================================
+   FOCUSED SVG
+   ============================================================ */
+
+.dashboard-grid.has-focus .is-focused .wb-svg {
+    width: 100%;
+    height: auto;
+}
+
+
+/* ============================================================
+   MINI SVG
+   ============================================================ */
+
+.dashboard-grid.has-focus .is-mini .wb-svg {
+    width: 100%;
+    height: auto;
+
+    max-height: 210px;
+}
+
+
+/* ============================================================
+   FOCUS BUTTON STATE
+   ============================================================ */
+
+.dashboard-grid.has-focus .is-focused .focus-open {
+    display: none;
+}
+
+.dashboard-grid.has-focus .is-focused .focus-close {
+    display: inline;
+}
+
+
+/* ============================================================
+   HOVER MINI CARD
+   ============================================================ */
+
+.dashboard-grid.has-focus .is-mini:hover {
+    opacity: 1;
+
+    border-color: #94a3b8;
+
+    box-shadow:
+        0 7px 18px rgba(15, 23, 42, 0.08);
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1100px) {
+
+    .dashboard-grid.has-focus {
+        grid-template-columns:
+            minmax(0, 2fr)
+            minmax(220px, 1fr);
+    }
+
+    .dashboard-grid.has-focus .viz-card.is-focused {
+        grid-column: 1;
+        grid-row: 1 / span 4;
+    }
+
+    .dashboard-grid.has-focus .viz-card.is-mini {
+        grid-column: 2 !important;
+        grid-row: auto !important;
+    }
+}
+
+
+@media (max-width: 760px) {
+
+    .dashboard-grid.has-focus {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-grid.has-focus .viz-card.is-focused,
+    .dashboard-grid.has-focus .viz-card.is-mini {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+    }
 }
 
 
