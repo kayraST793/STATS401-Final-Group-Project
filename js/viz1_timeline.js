@@ -68,38 +68,64 @@ WB.drawTimeline = function (state) {
         event
       );
     })
-    .on("mouseleave", () => { focus.style("opacity", 0); WB.hideTip();
-
-      // ============================================================
-      // BRUSH: select a date range and update the other visualizations
-      // ============================================================
-
-      const brush = d3.brushX()
-          .extent([
-              [0, 0],
-            [iw, ih]
-          ])
-          .on("end", function (event) {
-            if (!event.selection) {
-              WB.setDateRange(null);
-              return;
-            }
-
-            const [x0, x1] = event.selection;
-            const range = [
-                x.invert(x0),
-              x.invert(x1)
-            ];
-
-            WB.setDateRange(range);
-          });
-      const brushG = g.append("g")
-          .attr("class", "timeline-brush")
-          .call(brush);
-
-      // Listen for global reset
-      WB.events.on("reset.timeline", function () {
-        brushG.call(brush.move, null);
-      });
+    .on("mouseleave", () => {
+      focus.style("opacity", 0); WB.hideTip();
     });
+
+  // ============================================================
+  // BRUSH: select a date range and update the other visualizations
+  // ============================================================
+
+  const brush = d3.brushX()
+      .extent([
+          [0, 0],
+        [iw, ih]
+      ])
+      .on("end", function (event) {
+        if (!event.selection) {
+          WB.setDateRange(null);
+          return;
+        }
+
+        const [x0, x1] = event.selection;
+        const range = [
+            x.invert(x0),
+          x.invert(x1)
+        ];
+
+        WB.setDateRange(range);
+      });
+
+  const brushG = g.append("g")
+      .attr("class", "timeline-brush")
+      .call(brush);
+
+  // Listen for global reset
+  WB.events.on("reset.timeline", function () {
+    brushG.call(brush.move, null);
+  });
+  const selectedDateLine = g.append("line")
+      .attr("y1", 0)
+      .attr("y2", ih)
+      .attr("stroke", "#111")
+      .attr("stroke-width", 2)
+      .attr("stroke-dasharray", "4,3")
+      .style("pointer-events", "none")
+      .style("opacity", 0);
+
+  WB.events.on("datechange.timeline", function (date) {
+    if (!date) {
+      selectedDateLine.style("opacity", 0);
+      return;
+    }
+
+    selectedDateLine
+        .attr("x1", x(date))
+        .attr("x2", x(date))
+        .style("opacity", 1);
+  });
+
+  WB.events.on("reset.timeline-date", function () {
+    selectedDateLine.style("opacity", 0);
+  });
 };

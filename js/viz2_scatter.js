@@ -41,12 +41,74 @@ WB.drawScatter = function (state) {
   g.append("line").attr("class", "ref-line").attr("x1", x(0)).attr("x2", x(0)).attr("y1", 0).attr("y2", ih);
 
   // points
-  g.selectAll("circle").data(panel).join("circle")
-    .attr("cx", (d) => x(d.sp_return)).attr("cy", (d) => y(d.vix)).attr("r", 2.2)
-    .attr("fill", (d) => cfg.conditionColor[d.condition]).attr("opacity", 0.55)
-    .on("mouseover", (event, d) => WB.showTip(
-      `<b>${d3.timeFormat("%Y-%m-%d")(d.date)}</b><br>ret ${d.sp_return.toFixed(2)}% · VIX ${d.vix.toFixed(1)}<br>${d.condition}`,
-      event))
-    .on("mousemove", (event) => WB.tooltip.style("left", event.pageX + 14 + "px").style("top", event.pageY - 10 + "px"))
-    .on("mouseleave", WB.hideTip);
+  const points = g.selectAll("circle")
+      .data(panel)
+      .join("circle")
+
+      .attr("cx", (d) => x(d.sp_return)).attr("cy", (d) => y(d.vix)).attr("r", 2.2)
+      .attr("fill", (d) => cfg.conditionColor[d.condition]).attr("opacity", 0.55)
+      .on("click", (event, d) => {
+        WB.setDate(d.date);
+      })
+      .on("mouseover", (event, d) => WB.showTip(
+          `<b>${d3.timeFormat("%Y-%m-%d")(d.date)}</b><br>ret ${d.sp_return.toFixed(2)}% · VIX ${d.vix.toFixed(1)}<br>${d.condition}`,
+          event))
+      .on("mousemove", (event) => WB.tooltip.style("left", event.pageX + 14 + "px").style("top", event.pageY - 10 + "px"))
+      .on("mouseleave", WB.hideTip);
+
+// ============================================================
+// LINK SCATTER TO GLOBAL CONDITION
+// ============================================================
+
+WB.events.on("conditionchange.scatter", function (condition) {
+  points
+    .transition()
+    .duration(250)
+    .attr("opacity", d =>
+      condition === "All" || d.condition === condition
+        ? 0.75
+        : 0.07
+    )
+    .attr("r", d =>
+      condition === "All" || d.condition === condition
+        ? 3
+        : 2
+    );
+});
+
+// ============================================================
+// LINK SCATTER TO TIMELINE DATE BRUSH
+// ============================================================
+
+
+  WB.events.on("daterangechange.scatter", function (range) {
+    points
+        .transition()
+        .duration(250)
+        .attr("opacity", d => {
+          const condition = WB.state.filters.condition;
+
+          const conditionOK =
+              condition === "All" ||
+              d.condition === condition;
+
+          const dateOK =
+              !range ||
+              (d.date >= range[0] && d.date <= range[1]);
+
+          return conditionOK && dateOK ? 0.8 : 0.05;
+        });
+  });
+
+  // ============================================================
+  // RESET
+  // ============================================================
+
+  WB.events.on("reset.scatter", function () {
+    points
+        .transition()
+        .duration(250)
+        .attr("opacity", 0.55)
+        .attr("r", 2.2);
+  });
 };
