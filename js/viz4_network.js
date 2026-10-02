@@ -64,8 +64,8 @@ WB.drawNetwork = function (state) {
     lsel.exit().remove();
     lsel.enter().append("line").attr("class", "net-link").merge(lsel)
       .attr("stroke-width", (d) => 0.5 + Math.abs(d.c) * 4)
-      .attr("stroke", (d) => (d.c < 0 ? "#b42318" : "#9aa5b1"))
-      .attr("opacity", (d) => 0.25 + Math.abs(d.c) * 0.5);
+      .attr("stroke", (d) => (d.c < 0 ? "#b42318" : "#aab5c1"))
+      .attr("opacity", (d) => 0.12 + Math.abs(d.c) * 0.42);
 
     if (!nodeG.selectAll("g.node").size()) {
       const gN = nodeG.selectAll("g.node").data(nodes).join("g").attr("class", "node");
