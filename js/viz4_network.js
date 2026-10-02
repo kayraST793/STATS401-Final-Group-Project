@@ -15,12 +15,9 @@ WB.drawNetwork = function (state) {
   ctrl.append("span").text("Condition:");
   conditions.forEach((c) => {
     ctrl.append("button").text(c).classed("active", c === condition)
-      .on("click", function () {
-        condition = c;
-        ctrl.selectAll("button").classed("active", false);
-        d3.select(this).classed("active", true);
-        render();
-      });
+        .on("click", function () {
+          WB.setCondition(c);
+        });
   });
   ctrl.append("span").style("margin-left", "12px").text("|corr| ≥ ");
   const thLabel = ctrl.append("b").text(threshold.toFixed(2));
@@ -72,7 +69,15 @@ WB.drawNetwork = function (state) {
 
     if (!nodeG.selectAll("g.node").size()) {
       const gN = nodeG.selectAll("g.node").data(nodes).join("g").attr("class", "node");
-      gN.append("circle").attr("class", "net-node").attr("r", 11).attr("fill", (d) => color(d.name));
+      gN.append("circle")
+          .attr("class", "net-node")
+          .attr("r", 11)
+          .attr("fill", (d) => color(d.name))
+          .style("cursor", "pointer")
+          .on("click", function (event, d) {
+            event.stopPropagation();
+            WB.toggleIndustry(d.name);
+          });
       gN.append("text").attr("class", "net-label").attr("x", 14).attr("dy", "0.32em").text((d) => d.name);
       gN.call(d3.drag()
         .on("start", (e, d) => { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
@@ -101,5 +106,47 @@ WB.drawNetwork = function (state) {
       nodeG.selectAll("g.node").attr("transform", (d) => `translate(${d.x},${d.y})`);
     }
   }
+
+  WB.events.on("conditionchange.network", function (c) {
+    condition = c;
+
+    ctrl.selectAll("button")
+        .classed("active", function () {
+          return d3.select(this).text() === c;
+        });
+    render();
+  });
+
+  WB.events.on("reset.network", function () {
+    condition = "All";
+    ctrl.selectAll("button")
+        .classed("active", function () {
+          return d3.select(this).text() === "All";
+        });
+    render();
+  });
+
+  WB.events.on("industrychange.network", function (selected) {
+    nodeG.selectAll(".net-node")
+        .attr("stroke", d =>
+            selected.has(d.name) ? "#111" : "#fff"
+        )
+        .attr("stroke-width", d =>
+            selected.has(d.name) ? 4 : 1.5
+        )
+        .attr("opacity", d =>
+            selected.size === 0 || selected.has(d.name)
+                ? 1
+                : 0.25
+        );
+
+    nodeG.selectAll(".net-label")
+        .attr("opacity", d =>
+            selected.size === 0 || selected.has(d.name)
+                ? 1
+                : 0.25
+        );
+  });
+
   render();
 };
