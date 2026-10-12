@@ -132,14 +132,15 @@ body.wide {
 header h1 {
     margin-bottom: 4px;
 }
+
 .story-nav {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
 
     margin: 18px 0 20px;
-    padding: 10px 0;
+    padding: 5px 0;
 
     position: sticky;
     top: 0;
@@ -154,13 +155,13 @@ header h1 {
     align-items: center;
     justify-content: center;
 
-    padding: 7px 12px;
-    border-radius: 7px;
+    padding: 3px 7px;
+    border-radius: 5px;
 
     background: #f1f4f8;
     color: #1f3864;
 
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     text-decoration: none;
 
