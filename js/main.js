@@ -51,6 +51,7 @@
 
       renderConditionLegend(state);
       renderMeta(state);
+      setupMarketInsights(state);
 
       // dispatch each view, guarding so one failure doesn't kill the rest
       const views = [
@@ -111,6 +112,232 @@
         "(Kenneth R. French Data Library)"
     );
   }
+
+
+  // ============================================================
+  // MARKET SUMMARY + DYNAMIC EXPLANATION
+  // ============================================================
+
+  function setupMarketInsights(state) {
+      const dashboard = document.getElementById("dashboard-grid");
+
+      if (!dashboard || document.getElementById("market-insights")) {
+          return;
+      }
+
+      // Create the panels automatically above the visualizations
+      const section = document.createElement("section");
+      section.id = "market-insights";
+      section.className = "market-insights";
+
+      section.innerHTML = `
+      <div class="insights-stats" aria-label="Selected market summary">
+
+        <div class="insight-stat">
+          <span>Market trend</span>
+          <strong id="insight-trend">—</strong>
+          <small id="insight-trend-detail"></small>
+        </div>
+
+        <div class="insight-stat">
+          <span>Volatility</span>
+          <strong id="insight-volatility">—</strong>
+          <small id="insight-vix-detail"></small>
+        </div>
+
+        <div class="insight-stat">
+          <span>Trading days</span>
+          <strong id="insight-days">—</strong>
+          <small id="insight-days-detail"></small>
+        </div>
+
+        <div class="insight-stat">
+          <span>Top industry</span>
+          <strong id="insight-industry">—</strong>
+          <small id="insight-industry-detail"></small>
+        </div>
+
+      </div>
+
+      <div class="insight-explanation" aria-live="polite">
+        <div class="insight-explanation-heading">
+          Understanding market conditions
+          <span id="insight-condition" class="insight-pill">
+            All conditions
+          </span>
+        </div>
+
+        <p id="insight-description"></p>
+        <small id="insight-context"></small>
+      </div>
+    `;
+
+      dashboard.parentNode.insertBefore(section, dashboard);
+
+      // Explanations for each market condition
+      const descriptions = {
+      "All":
+        "The dashboard groups trading days using the direction of the S&P 500 daily return and whether VIX is above or below its median. Choose a condition in the heatmap or network to explore a specific market environment.",
+
+      "Calm-Up":
+        "The S&P 500 increased while VIX was relatively low. This is a rising market day with lower expected volatility.",
+
+      "Calm-Down":
+        "The S&P 500 declined while VIX was relatively low. Prices fell despite comparatively calm expectations.",
+
+      "Volatile-Up":
+        "The S&P 500 increased while VIX was relatively high. Prices rose even though expected volatility was elevated.",
+
+      "Volatile-Down":
+        "The S&P 500 declined while VIX was relatively high. Falling prices coincided with elevated expected volatility."
+
+      };
+
+      const put = (id, value) => {
+          document.getElementById(id).textContent = value;
+      };
+
+      const dateFormat = d3.timeFormat("%b %d, %Y");
+      const names = state.meta.industryNames || {};
+      const cut = +state.meta.vixCut;
+
+      // Recalculate the summary using current filters
+      function update() {
+          const {
+              condition,
+              dateRange,
+              industries
+          } = state.filters;
+
+          const inRange = d =>
+              !dateRange ||
+              (d.date >= dateRange[0] && d.date <= dateRange[1]);
+
+          const matches = d =>
+              inRange(d) &&
+              (condition === "All" || d.condition === condition);
+
+          const days = state.panel.filter(matches);
+
+          const meanReturn = d3.mean(days, d => d.sp_return);
+          const meanVix = d3.mean(days, d => d.vix);
+
+          const sign = v => v > 0 ? "+" : "";
+
+
+          // 1. MARKET TREND
+          put(
+              "insight-trend",
+              days.length
+                  ? meanReturn > 0
+                      ? "Rising"
+                      : meanReturn < 0
+                          ? "Falling"
+                          : "Flat"
+                  : "No data"
+          );
+
+          put(
+              "insight-trend-detail",
+              days.length
+                  ? `${sign(meanReturn)}${meanReturn.toFixed(2)}% avg daily S&P return`
+                  : "No matching trading days"
+          );
+
+          // 2. VOLATILITY
+          put(
+              "insight-volatility",
+              days.length
+                  ? meanVix > cut ? "Elevated" : "Calm"
+                  : "No data"
+          );
+
+          put(
+              "insight-vix-detail",
+              days.length
+                  ? `Avg VIX ${meanVix.toFixed(1)} · median cutoff ${cut.toFixed(2)}`
+                  : "No matching VIX data"
+          );
+
+          // 3. TRADING DAYS
+          put("insight-days", days.length.toLocaleString());
+
+          put(
+              "insight-days-detail",
+              "Days matching date and condition filters"
+          );
+
+          // 4. TOP-PERFORMING INDUSTRY
+          const grouped = d3.group(
+              state.industryDaily
+                  .filter(matches)
+                  .filter(d => d.ret != null && Number.isFinite(d.ret)),
+                  d => d.code
+          );
+
+          let leaders = Array.from(
+              grouped,
+              ([code, rows]) => ({
+                  code,
+                  mean: d3.mean(rows, d => d.ret)
+              })
+          );
+
+          // Industry selections affect only the industry ranking
+          if (industries.size) {
+              leaders = leaders.filter(
+                  d =>
+                      industries.has(d.code) ||
+                      industries.has(names[d.code])
+              );
+          }
+
+          leaders.sort((a, b) => b.mean - a.mean);
+
+          const leader = leaders[0];
+
+          put(
+              "insight-industry",
+              leader ? (names[leader.code] || leader.code) : "No data"
+          );
+
+          put(
+              "insight-industry-detail",
+              leader
+                  ? `${sign(leader.mean)}${leader.mean.toFixed(2)}% avg daily return${industries.size ? " · selected industries" : ""}`
+                  : "No matching industry returns"
+          );
+
+          // 5. DYNAMIC EXPLANATION
+          put(
+              "insight-condition",
+              condition === "All" ? "All conditions" : condition
+          );
+
+          put(
+              "insight-description",
+              descriptions[condition] || descriptions.All
+          );
+
+          put(
+              "insight-context",
+              `${dateRange 
+                  ? `${dateFormat(dateRange[0])} – ${dateFormat(dateRange[1])}` 
+                  : "Full available date range"
+              } · VIX cutoff ${cut.toFixed(2)} · VIX measures expected volatility, not realized daily price changes.`
+          );
+      }
+
+      // Listen to existing shared dashboard events
+      WB.events.on("conditionchange.insights", update);
+      WB.events.on("daterangechange.insights", update);
+      WB.events.on("industrychange.insights", update);
+      WB.events.on("reset.insights", update);
+
+      // Initial display
+      update();
+  }
+
 
   function setupDashboardUI() {
     const dashboard = document.getElementById("dashboard-grid");

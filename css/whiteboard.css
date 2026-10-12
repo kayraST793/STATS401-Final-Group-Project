@@ -994,3 +994,101 @@ body {
         flex-direction: column;
     }
 }
+
+
+/* ============================================================
+   MARKET SUMMARY + DYNAMIC EXPLANATION
+   ============================================================ */
+
+.market-insights {
+    margin: 0 0 18px;
+}
+
+/* Four summary cards */
+
+.insights-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.insight-stat,
+.insight-explanation {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+}
+
+.insight-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 16px 18px;
+    min-width: 0;
+}
+
+.insight-stat > span {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.insight-stat strong {
+    color: var(--text);
+    font-size: clamp(16px, 1.7vw, 24px);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.insight-stat small,
+.insight-explanation small {
+    color: var(--text-secondary);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+/* Explanation panel */
+
+.insight-explanation {
+    padding: 16px 18px;
+    background: var(--surface-soft);
+}
+
+.insight-explanation-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font-weight: 750;
+    font-size: 14px;
+}
+
+.insight-pill {
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 11px;
+}
+
+.insight-explanation p {
+    margin: 10px 0 6px;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+/* Responsive layout */
+
+@media (max-width: 900px) {
+    .insights-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .insights-stats {
+        grid-template-columns: 1fr;
+    }
+}
