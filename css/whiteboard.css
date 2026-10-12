@@ -137,7 +137,7 @@ header h1 {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 
     margin: 18px 0 20px;
     padding: 12px 0;
@@ -155,13 +155,13 @@ header h1 {
     align-items: center;
     justify-content: center;
 
-    padding: 10px 18px;
+    padding: 12px 20px;
     border-radius: 12px;
 
     background: #f1f4f8;
     color: #1f3864;
 
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     text-decoration: none;
 
