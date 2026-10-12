@@ -42,8 +42,83 @@ WB.drawNetwork = function (state) {
   let sim;
 
   function matrix() {
-    return condition === "All" ? corr.All : corr.byCondition[condition];
-  }
+    const range = state.filters.dateRange;
+
+    // Original precomputed correlations
+    if (!range) {
+        return condition === "All"
+            ? corr.All
+            : corr.byCondition[condition];
+    }
+
+    // Recalculate correlations for the brushed period
+    const rows = state.industryDaily.filter(d =>
+        d.ret != null &&
+        Number.isFinite(d.ret) &&
+        d.date >= range[0] &&
+        d.date <= range[1] &&
+        (
+            condition === "All" ||
+            d.condition === condition
+        )
+    );
+
+    const byDate = d3.group(rows, d => +d.date);
+
+    const dailyReturns = Array.from(
+        byDate.values(),
+        day => new Map(
+            day.map(d => [
+                WB.normalizeIndustry(d.code),
+                d.ret
+            ])
+        )
+    );
+
+    return names.map(a =>
+        names.map(b => {
+            if (a === b) return 1;
+
+            const x = [];
+            const y = [];
+
+            for (const day of dailyReturns) {
+                const av = day.get(
+                    WB.normalizeIndustry(a)
+                );
+
+                const bv = day.get(
+                    WB.normalizeIndustry(b)
+                );
+
+                if (av != null && bv != null) {
+                    x.push(av);
+                    y.push(bv);
+                }
+            }
+
+            if (x.length < 3) return null;
+
+            const mx = d3.mean(x);
+            const my = d3.mean(y);
+
+            const numerator = d3.sum(
+                x,
+                (v, i) => (v - mx) * (y[i] - my)
+            );
+
+            const denominator = Math.sqrt(
+                d3.sum(x, v => (v - mx) ** 2) *
+                d3.sum(y, v => (v - my) ** 2)
+            );
+
+            return denominator
+                ? numerator / denominator
+                : null;
+        })
+    );
+}
+
 
   function render() {
     const M = matrix();
@@ -60,7 +135,11 @@ WB.drawNetwork = function (state) {
         }
     }
 
-    const lsel = linkG.selectAll("line").data(links, (d) => d.source + "-" + d.target);
+    const lsel = linkG.selectAll("line")
+        .data(
+            links,
+                d => `${d.source.id ?? d.source}-${d.target.id ?? d.target}`
+        );
     lsel.exit().remove();
     lsel.enter().append("line").attr("class", "net-link").merge(lsel)
       .attr("stroke-width", (d) => 0.5 + Math.abs(d.c) * 4)
@@ -107,6 +186,8 @@ WB.drawNetwork = function (state) {
     }
   }
 
+  WB.events.on("daterangechange.network", render);
+
   WB.events.on("conditionchange.network", function (c) {
     condition = c;
 
@@ -129,20 +210,20 @@ WB.drawNetwork = function (state) {
   WB.events.on("industrychange.network", function (selected) {
     nodeG.selectAll(".net-node")
         .attr("stroke", d =>
-            selected.has(d.name) ? "#111" : "#fff"
+            selected.has(WB.normalizeIndustry(d.name)) ? "#111" : "#fff"
         )
         .attr("stroke-width", d =>
-            selected.has(d.name) ? 4 : 1.5
+            selected.has(WB.normalizeIndustry(d.name)) ? 4 : 1.5
         )
         .attr("opacity", d =>
-            selected.size === 0 || selected.has(d.name)
+            selected.size === 0 || selected.has(WB.normalizeIndustry(d.name))
                 ? 1
                 : 0.25
         );
 
     nodeG.selectAll(".net-label")
         .attr("opacity", d =>
-            selected.size === 0 || selected.has(d.name)
+            selected.size === 0 || selected.has(WB.normalizeIndustry(d.name))
                 ? 1
                 : 0.25
         );
