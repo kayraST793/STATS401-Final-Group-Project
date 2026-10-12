@@ -40,6 +40,85 @@ WB.drawScatter = function (state) {
     .attr("text-anchor", "end").text(`VIX median ${meta.vixCut}`);
   g.append("line").attr("class", "ref-line").attr("x1", x(0)).attr("x2", x(0)).attr("y1", 0).attr("y2", ih);
 
+
+// ============================================================
+// CLICKABLE MARKET-CONDITION QUADRANTS
+// ============================================================
+
+const quadrants = [
+    {
+        condition: "Calm-Up",
+        x0: x(0),
+        x1: iw,
+        y0: y(meta.vixCut),
+        y1: ih
+    },
+    {
+        condition: "Calm-Down",
+        x0: 0,
+        x1: x(0),
+        y0: y(meta.vixCut),
+        y1: ih
+    },
+    {
+        condition: "Volatile-Up",
+        x0: x(0),
+        x1: iw,
+        y0: 0,
+        y1: y(meta.vixCut)
+    },
+    {
+        condition: "Volatile-Down",
+        x0: 0,
+        x1: x(0),
+        y0: 0,
+        y1: y(meta.vixCut)
+    }
+];
+
+function selectQuadrant(condition) {
+    const current = WB.state.filters.condition;
+
+    WB.setCondition(
+        current === condition ? "All" : condition
+    );
+}
+
+// Clickable backgrounds
+const quadrantLayer = g.append("g")
+    .attr("class", "quadrant-layer");
+
+quadrantLayer.selectAll("rect")
+    .data(quadrants)
+    .join("rect")
+    .attr("x", d => d.x0)
+    .attr("y", d => d.y0)
+    .attr("width", d => d.x1 - d.x0)
+    .attr("height", d => d.y1 - d.y0)
+    .attr("fill", d => cfg.conditionColor[d.condition])
+    .attr("fill-opacity", 0.025)
+    .style("cursor", "pointer")
+    .on("click", (event, d) => {
+        selectQuadrant(d.condition);
+    });
+
+// Clickable quadrant labels
+const quadrantLabels = g.append("g")
+    .attr("class", "quadrant-labels");
+
+quadrantLabels.selectAll("text")
+    .data(quadrants)
+    .join("text")
+    .attr("x", d => (d.x0 + d.x1) / 2)
+    .attr("y", d => d.y0 + 16)
+    .attr("text-anchor", "middle")
+    .attr("class", "quadrant-choice")
+    .text(d => d.condition)
+    .on("click", (event, d) => {
+        selectQuadrant(d.condition);
+    });
+
+
   // points
   const points = g.selectAll("circle")
       .data(panel)
@@ -48,6 +127,7 @@ WB.drawScatter = function (state) {
       .attr("cx", (d) => x(d.sp_return)).attr("cy", (d) => y(d.vix)).attr("r", 2.2)
       .attr("fill", (d) => cfg.conditionColor[d.condition]).attr("opacity", 0.55)
       .on("click", (event, d) => {
+        selectQuadrant(d.condition);
         WB.setDate(d.date);
       })
       .on("mouseover", (event, d) => WB.showTip(
@@ -56,59 +136,46 @@ WB.drawScatter = function (state) {
       .on("mousemove", (event) => WB.tooltip.style("left", event.pageX + 14 + "px").style("top", event.pageY - 10 + "px"))
       .on("mouseleave", WB.hideTip);
 
-// ============================================================
-// LINK SCATTER TO GLOBAL CONDITION
-// ============================================================
-
-WB.events.on("conditionchange.scatter", function (condition) {
-  points
-    .transition()
-    .duration(250)
-    .attr("opacity", d =>
-      condition === "All" || d.condition === condition
-        ? 0.75
-        : 0.07
-    )
-    .attr("r", d =>
-      condition === "All" || d.condition === condition
-        ? 3
-        : 2
-    );
-});
-
-// ============================================================
-// LINK SCATTER TO TIMELINE DATE BRUSH
-// ============================================================
 
 
-  WB.events.on("daterangechange.scatter", function (range) {
+function updateSelection() {
+    const { condition, dateRange } = state.filters;
+
+    const noFilters =
+        condition === "All" && !dateRange;
+
     points
         .transition()
         .duration(250)
         .attr("opacity", d => {
-          const condition = WB.state.filters.condition;
+            if (noFilters) return 0.55;
 
-          const conditionOK =
-              condition === "All" ||
-              d.condition === condition;
+            const conditionOK =
+                condition === "All" ||
+                d.condition === condition;
 
-          const dateOK =
-              !range ||
-              (d.date >= range[0] && d.date <= range[1]);
+            const dateOK =
+                !dateRange ||
+                (d.date >= dateRange[0] &&
+                 d.date <= dateRange[1]);
 
-          return conditionOK && dateOK ? 0.8 : 0.05;
+            return conditionOK && dateOK ? 0.75 : 0.05;
+        })
+        .attr("r", d => {
+            if (noFilters) return 2.2;
+
+            return condition === "All" ||
+                d.condition === condition ? 2.8 : 2;
         });
-  });
 
-  // ============================================================
-  // RESET
-  // ============================================================
+    quadrantLabels.selectAll("text")
+        .classed("selected", d =>
+            d.condition === condition
+        );
+}
 
-  WB.events.on("reset.scatter", function () {
-    points
-        .transition()
-        .duration(250)
-        .attr("opacity", 0.55)
-        .attr("r", 2.2);
-  });
+WB.events.on("conditionchange.scatter", updateSelection);
+WB.events.on("daterangechange.scatter", updateSelection);
+WB.events.on("reset.scatter", updateSelection);
+
 };
