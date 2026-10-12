@@ -1092,3 +1092,93 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* ============================================================
+   LINKED VISUALIZATION INTERACTIONS
+   ============================================================ */
+
+/* Active filter indicator */
+
+.filter-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 10px 14px;
+    margin: 0 0 12px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: #ffffff;
+    color: var(--text-secondary);
+
+    font-size: 12px;
+}
+
+/* Highlight when filters are active */
+
+.filter-status.is-filtered {
+    background: var(--accent-soft);
+    border-color: #bfd2e2;
+    color: var(--accent);
+    font-weight: 650;
+}
+
+/* Clear filters button */
+
+.filter-status button {
+    border: 1px solid var(--border-strong);
+    border-radius: 7px;
+
+    padding: 6px 10px;
+
+    background: #ffffff;
+    color: var(--text);
+
+    font: inherit;
+    cursor: pointer;
+
+    transition:
+        background 160ms ease,
+        color 160ms ease;
+}
+
+.filter-status button:hover {
+    background: var(--text);
+    color: #ffffff;
+}
+
+.filter-status button[hidden] {
+    display: none;
+}
+
+/* ============================================================
+   CLICKABLE SCATTER QUADRANTS
+   ============================================================ */
+
+.quadrant-choice {
+    font-size: 12px;
+    font-weight: 750;
+
+    fill: #334155;
+    cursor: pointer;
+
+    paint-order: stroke;
+    stroke: white;
+    stroke-width: 3px;
+    stroke-linejoin: round;
+
+    transition: fill 160ms ease;
+}
+
+.quadrant-choice:hover {
+    fill: #0969da;
+}
+
+.quadrant-choice.selected {
+    fill: #0b5793;
+    text-decoration: underline;
+}
