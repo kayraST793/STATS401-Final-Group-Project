@@ -10,6 +10,12 @@
     --line: #d0d7de;
 }
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 /* ---- base document (merged from style.css) ---- */
 body {
     font-family: Arial, sans-serif;
@@ -393,8 +399,8 @@ body {
    ============================================================ */
 
 .dashboard-section {
-    width: calc(100vw - 32px);
-    max-width: 1900px;
+    width: calc(100% - 48px);
+    max-width: 1500px;
     margin: 24px auto 60px;
 }
 
@@ -698,7 +704,7 @@ body {
     display: grid;
 
     grid-template-columns:
-        minmax(0, 5.4fr)
+        minmax(0, 3.5fr)
         minmax(180px, 1fr);
 
     column-gap: 10px;
