@@ -827,11 +827,10 @@ body {
 
 .dashboard-grid.has-focus .is-focused .wb-svg {
     display: block;
-
     width: 100%;
-    max-width: 100%;
-
+    max-width: 900px;
     height: auto;
+    margin: 0 auto;
 }
 
 .dashboard-grid.has-focus .is-mini .wb-svg {
