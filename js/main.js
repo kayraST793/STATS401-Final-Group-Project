@@ -49,6 +49,18 @@
 
       WB.state = state;
 
+      WB.normalizeIndustry = function (value) {
+          const names = state.meta.industryNames || {};
+
+          if (Object.prototype.hasOwnProperty.call(names, value)) {
+              return value;
+          }
+
+          return Object.keys(names).find(
+              code => names[code] === value
+          ) || value;
+      };
+
       renderConditionLegend(state);
       renderMeta(state);
       setupMarketInsights(state);
@@ -71,6 +83,7 @@
       });
 
       setupDashboardUI();
+      setupFilterStatus(state);
 
     })
     .catch((err) => {
@@ -339,6 +352,81 @@
   }
 
 
+  function setupFilterStatus(state) {
+      const grid = document.getElementById("dashboard-grid");
+
+      if (!grid || document.querySelector(".filter-status")) {
+          return;
+      }
+
+      const bar = document.createElement("div");
+      bar.className = "filter-status";
+
+      bar.innerHTML = `
+      <span id="active-filter-label">
+            Showing all market data
+        </span>
+        <button type="button" id="clear-active-filters" hidden>
+            Clear filters
+        </button>
+    `;
+
+      grid.parentNode.insertBefore(bar, grid);
+
+      bar.querySelector("button").addEventListener(
+          "click",
+          () => WB.resetDashboard()
+      );
+
+      function update() {
+          const filters = state.filters;
+          const tags = [];
+          const formatDate = d3.timeFormat("%b %d, %Y");
+
+          if (filters.dateRange) {
+              tags.push(
+                  `${formatDate(filters.dateRange[0])} – ${formatDate(filters.dateRange[1])}`
+              );
+          }
+
+          if (filters.condition !== "All") {
+              tags.push(filters.condition);
+          }
+
+          if (filters.industries.size > 0) {
+              tags.push(
+                  `${filters.industries.size} selected industries`
+              );
+          }
+
+          if (filters.selectedDate) {
+              tags.push(
+                  `Day: ${formatDate(filters.selectedDate)}`
+              );
+          }
+
+          const active = tags.length > 0;
+
+          bar.classList.toggle("is-filtered", active);
+
+          bar.querySelector("#active-filter-label").textContent =
+              active
+                  ? `Active filters: ${tags.join(" · ")}`
+                  : "Showing all market data";
+
+          bar.querySelector("button").hidden = !active;
+      }
+
+      WB.events.on("conditionchange.status", update);
+      WB.events.on("daterangechange.status", update);
+      WB.events.on("industrychange.status", update);
+      WB.events.on("datechange.status", update);
+      WB.events.on("reset.status", update);
+
+      update();
+  }
+
+
   function setupDashboardUI() {
     const dashboard = document.getElementById("dashboard-grid");
 
@@ -452,14 +540,20 @@
   };
 
   WB.toggleIndustry = function (industry) {
-    const selected = WB.state.filters.industries;
+      const code = WB.normalizeIndustry(industry);
+      const selected = WB.state.filters.industries;
 
-    if (selected.has(industry)) {
-      selected.delete(industry);
-    } else {
-      selected.add(industry);
-    }
-    WB.events.call("industrychange", null, new Set(selected));
+      if (selected.has(code)) {
+          selected.delete(code);
+      } else {
+          selected.add(code);
+      }
+
+      WB.events.call(
+          "industrychange",
+          null,
+          new Set(selected)
+      );
   };
 
   WB.resetDashboard = function () {
