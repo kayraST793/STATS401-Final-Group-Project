@@ -142,7 +142,7 @@ header h1 {
     margin: 18px 0 20px;
     padding: 12px 0;
 
-    position: sticky;
+    position: static;
     top: 0;
     z-index: 5;
 
