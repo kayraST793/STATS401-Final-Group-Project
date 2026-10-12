@@ -43,13 +43,26 @@ WB.drawTimeline = function (state) {
       segs[segs.length - 1].end = panel[i].date;
     }
   }
-  g.selectAll(".ribbon").data(segs).join("rect")
+  const ribbons = g.selectAll(".ribbon").data(segs).join("rect")
     .attr("x", (d) => x(d.start))
     .attr("y", ry)
     .attr("width", (d) => Math.max(1, x(d.end) - x(d.start) + 1))
     .attr("height", ribbonH)
     .attr("fill", (d) => cfg.conditionColor[d.c]);
   g.append("text").attr("class", "axis-title").attr("x", -40).attr("y", ry + 12).text("cond.");
+
+  function updateRibbon() {
+    const condition = state.filters.condition;
+
+    ribbons.attr("opacity", d =>
+        condition === "All" || d.c === condition
+            ? 1
+            : 0.18
+    );
+  }
+
+  WB.events.on("conditionchange.timeline-ribbon", updateRibbon);
+  WB.events.on("reset.timeline-ribbon", updateRibbon);
 
   // hover guideline
   const focus = g.append("line").attr("class", "ref-line").attr("y1", 0).attr("y2", ih).style("opacity", 0);
