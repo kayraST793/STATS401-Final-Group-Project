@@ -110,6 +110,7 @@ WB.drawComparison = function (state) {
   );
 
   const series = {};
+  let activeRange = null;
 
   codes.forEach(code => {
     const rows = (byCode.get(code) || [])
@@ -293,7 +294,35 @@ WB.drawComparison = function (state) {
   // ============================================================
 
   function render() {
-    const on = codes.filter(c => selected.has(c));
+
+    // Rebuild cumulative returns from the start of the selected period
+    codes.forEach(code => {
+      let value = 1;
+
+      const rows = (byCode.get(code) || [])
+          .filter(d =>
+              !activeRange ||
+              (
+                  d.date >= activeRange[0] &&
+                  d.date <= activeRange[1]
+              )
+          )
+          .slice()
+          .sort((a, b) => a.date - b.date);
+
+      series[code] = rows.map(d => {
+        value *= 1 + d.ret / 100;
+
+        return {
+          date: d.date,
+          v: value
+        };
+      });
+    });
+
+    const on = codes.filter(
+        c => selected.has(c) && series[c].length
+    );
 
     const maxV =
       d3.max(
@@ -406,9 +435,11 @@ WB.drawComparison = function (state) {
     // Replace local selection with global selection
     selected.clear();
 
-    normalized.forEach(code => {
-      selected.add(code);
-    });
+    if (normalized.size > 0) {
+      normalized.forEach(code => selected.add(code));
+    } else {
+      defaultOn.forEach(code => selected.add(code));
+    }
 
     // Update chips
     ctrl
@@ -426,14 +457,12 @@ WB.drawComparison = function (state) {
   // ============================================================
 
   WB.events.on("daterangechange.comparison", function (range) {
+    activeRange = range;
 
-    if (!range) {
-      x.domain(d3.extent(allDates));
-      render();
-      return;
-    }
+    x.domain(
+        range || d3.extent(allDates)
+    );
 
-    x.domain(range);
     render();
   });
 
@@ -443,6 +472,7 @@ WB.drawComparison = function (state) {
 
   WB.events.on("reset.comparison", function () {
 
+    activeRange = null;
     selected.clear();
 
     defaultOn.forEach(code => {
