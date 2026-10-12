@@ -132,33 +132,44 @@ body.wide {
 header h1 {
     margin-bottom: 4px;
 }
-
 .story-nav {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin: 18px 0 26px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--line);
+    align-items: center;
+    gap: 6px;
+
+    margin: 18px 0 20px;
+    padding: 10px 0;
+
     position: sticky;
     top: 0;
-    background: #fff;
     z-index: 5;
+
+    background: transparent;
+    border-bottom: 1px solid var(--line);
 }
 
 .story-nav a {
-    padding: 7px 13px;
-    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 7px 12px;
+    border-radius: 7px;
+
     background: #f1f4f8;
     color: #1f3864;
-    border-radius: 6px;
-    font-size: 14px;
+
+    font-size: 12px;
     font-weight: 600;
+    text-decoration: none;
+
+    transition: background 0.2s ease;
 }
 
 .story-nav a:hover {
     background: #1f3864;
-    color: #fff;
+    color: white;
 }
 
 main section {
