@@ -65,80 +65,130 @@ WB.drawTimeline = function (state) {
   WB.events.on("reset.timeline-ribbon", updateRibbon);
 
   // hover guideline
-  const focus = g.append("line").attr("class", "ref-line").attr("y1", 0).attr("y2", ih).style("opacity", 0);
-  svg.append("rect").attr("transform", `translate(${m.left},${m.top})`)
-    .attr("width", iw).attr("height", ih).attr("fill", "transparent")
-    .on("mousemove", function (event) {
-      const mx = d3.pointer(event, this)[0];
-      const dt = x.invert(mx);
-      const i = d3.bisector((d) => d.date).left(panel, dt);
-      const d = panel[Math.min(i, panel.length - 1)];
-      if (!d) return;
-      focus.attr("x1", x(d.date)).attr("x2", x(d.date)).style("opacity", 1);
-      WB.showTip(
-        `<b>${d3.timeFormat("%Y-%m-%d")(d.date)}</b><br>S&P ${d.sp500.toFixed(0)} · ` +
-          `ret ${d.sp_return.toFixed(2)}%<br>VIX ${d.vix.toFixed(1)} · ${d.condition}`,
-        event
-      );
-    })
-    .on("mouseleave", () => {
-      focus.style("opacity", 0); WB.hideTip();
-    });
-
-  // ============================================================
-  // BRUSH: select a date range and update the other visualizations
-  // ============================================================
-
-  const brush = d3.brushX()
-      .extent([
-          [0, 0],
-        [iw, ih]
-      ])
-      .on("end", function (event) {
-        if (!event.selection) {
-          WB.setDateRange(null);
-          return;
-        }
-
-        const [x0, x1] = event.selection;
-        const range = [
-            x.invert(x0),
-          x.invert(x1)
-        ];
-
-        WB.setDateRange(range);
-      });
-
-  const brushG = g.append("g")
-      .attr("class", "timeline-brush")
-      .call(brush);
-
-  // Listen for global reset
-  WB.events.on("reset.timeline", function () {
-    brushG.call(brush.move, null);
-  });
-  const selectedDateLine = g.append("line")
+  const focus = g.append("line")
+      .attr("class", "ref-line")
       .attr("y1", 0)
       .attr("y2", ih)
-      .attr("stroke", "#111")
-      .attr("stroke-width", 2)
-      .attr("stroke-dasharray", "4,3")
       .style("pointer-events", "none")
       .style("opacity", 0);
 
-  WB.events.on("datechange.timeline", function (date) {
+  // ============================================================
+  // BRUSH: SELECT A DATE RANGE
+  // ============================================================
+
+  const brush = d3.brushX()
+    .extent([
+      [0, 0],
+      [iw, ih]
+    ])
+    .on("end", function (event) {
+
+      // Ignore brush events caused by programmatic changes
+      if (!event.sourceEvent) return;
+
+      // If selection is cleared, remove the date filter
+      if (!event.selection) {
+        WB.setDateRange(null);
+        return;
+      }
+
+      const [x0, x1] = event.selection;
+
+      const startDate = x.invert(x0);
+      const endDate = x.invert(x1);
+
+      WB.setDateRange([startDate, endDate]);
+
+      console.log(
+        "Timeline brushed:",
+        startDate,
+        endDate
+      );
+    });
+
+  const brushG = g.append("g")
+    .attr("class", "timeline-brush")
+    .call(brush);
+
+  // Make sure the brush stays above the chart
+  brushG.raise();
+
+
+brushG
+    .on("mousemove.tooltip", function (event) {
+        const mx = d3.pointer(event, this)[0];
+
+        if (mx < 0 || mx > iw) return;
+
+        const dt = x.invert(mx);
+
+        const i = d3.bisector(d => d.date)
+            .left(panel, dt);
+
+        const d = panel[Math.min(i, panel.length - 1)];
+
+        if (!d) return;
+
+        focus
+            .attr("x1", x(d.date))
+            .attr("x2", x(d.date))
+            .style("opacity", 1);
+
+        WB.showTip(
+            `<b>${d3.timeFormat("%Y-%m-%d")(d.date)}</b><br>` +
+            `S&P ${d.sp500.toFixed(0)} · ` +
+            `ret ${d.sp_return.toFixed(2)}%<br>` +
+            `VIX ${d.vix.toFixed(1)} · ${d.condition}`,
+            event
+        );
+    })
+    .on("mouseleave.tooltip", function () {
+        focus.style("opacity", 0);
+        WB.hideTip();
+    });
+
+
+  // Give the brush an obvious selection appearance
+  brushG.select(".selection")
+    .attr("fill", "#3b82f6")
+    .attr("fill-opacity", 0.18)
+    .attr("stroke", "#2563eb")
+    .attr("stroke-width", 1.5);
+
+  // Show the draggable area
+  brushG.select(".overlay")
+    .style("cursor", "crosshair")
+    .style("pointer-events", "all");
+
+  // Clear brush when Reset is clicked
+  WB.events.on("reset.timeline", function () {
+    brushG.call(brush.move, null);
+  });
+
+  // Selected date indicator
+const selectedDateLine = g.append("line")
+    .attr("y1", 0)
+    .attr("y2", ih)
+    .attr("stroke", "#111")
+    .attr("stroke-width", 2)
+    .attr("stroke-dasharray", "4,3")
+    .style("pointer-events", "none")
+    .style("opacity", 0);
+
+WB.events.on("datechange.timeline", function (date) {
     if (!date) {
-      selectedDateLine.style("opacity", 0);
-      return;
+        selectedDateLine.style("opacity", 0);
+        return;
     }
 
     selectedDateLine
         .attr("x1", x(date))
         .attr("x2", x(date))
         .style("opacity", 1);
-  });
+});
 
-  WB.events.on("reset.timeline-date", function () {
+WB.events.on("reset.timeline-date", function () {
     selectedDateLine.style("opacity", 0);
-  });
+});
+
 };

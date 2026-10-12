@@ -1182,3 +1182,23 @@ body {
     fill: #0b5793;
     text-decoration: underline;
 }
+
+/* Timeline brushing */
+
+.timeline-brush .overlay {
+    cursor: crosshair;
+    pointer-events: all;
+}
+
+.timeline-brush .selection {
+    fill: #3b82f6;
+    fill-opacity: 0.18;
+    stroke: #2563eb;
+    stroke-width: 1.5;
+}
+
+.timeline-brush .handle {
+    fill: #2563eb;
+    stroke: white;
+    stroke-width: 1;
+}
