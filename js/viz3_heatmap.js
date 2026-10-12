@@ -2,7 +2,7 @@
 WB.drawHeatmap = function (state) {
   const { agg, cfg } = state;
   const conditions = agg.conditionOrder;
-  const records = agg.records;
+  let records = agg.records;
   const industries = [...new Set(records.map((r) => r.industry))];
 
   let metric = "mean"; // "mean" | "sharpe"
@@ -45,6 +45,82 @@ WB.drawHeatmap = function (state) {
     .attr("text-anchor", "end").text((d) => d);
 
   const cellG = g.append("g");
+
+
+// ============================================================
+// RECALCULATE HEATMAP FOR SELECTED DATE RANGE
+// ============================================================
+
+function recompute() {
+    const range = state.filters.dateRange;
+
+    if (!range) {
+        records = agg.records;
+        return;
+    }
+
+    const filtered = state.industryDaily.filter(d =>
+        d.ret != null &&
+        Number.isFinite(d.ret) &&
+        d.date >= range[0] &&
+        d.date <= range[1]
+    );
+
+    const grouped = d3.group(
+        filtered,
+        d => `${WB.normalizeIndustry(d.code)}|${d.condition}`
+    );
+
+    records = agg.records.map(original => {
+        const code = WB.normalizeIndustry(original.industry);
+
+        const rows = grouped.get(
+            `${code}|${original.condition}`
+        ) || [];
+
+        const values = rows.map(d => d.ret);
+
+        const mean = values.length
+            ? d3.mean(values)
+            : null;
+
+        const std = values.length > 1
+            ? d3.deviation(values)
+            : null;
+
+        return {
+            ...original,
+            mean,
+            std,
+            sharpe: std > 0 ? mean / std : null,
+            n: values.length
+        };
+    });
+}
+
+// ============================================================
+// LINKED INDUSTRY + CONDITION HIGHLIGHTING
+// ============================================================
+
+function updateHighlights() {
+    const { condition, industries } = state.filters;
+
+    cellG.selectAll(".cellwrap")
+        .attr("opacity", d => {
+            const conditionOK =
+                condition === "All" ||
+                d.condition === condition;
+
+            const industryOK =
+                industries.size === 0 ||
+                industries.has(
+                    WB.normalizeIndustry(d.industry)
+                );
+
+            return conditionOK && industryOK ? 1 : 0.15;
+        });
+}
+
 
   function render() {
     const vals = records.map((r) => r[metric]).filter((v) => v != null);
@@ -90,39 +166,30 @@ WB.drawHeatmap = function (state) {
       .attr("text-anchor", "middle")
       .attr("fill", (d) => (Math.abs(d[metric] ?? 0) > lim * 0.6 ? "#fff" : "#222"))
       .text((d) => (d[metric] == null ? "" : fmt(d[metric])));
+
+    updateHighlights();
   }
   const fmt = (v) => (v == null ? "–" : d3.format(".2f")(v));
 
-  WB.events.on("conditionchange.heatmap", function (condition) {
-    cellG.selectAll(".cellwrap")
-        .attr("opacity", d =>
-            condition === "All" || d.condition === condition
-                ? 1
-                : 0.18
-        );
-  });
+  WB.events.on(
+      "conditionchange.heatmap",
+      updateHighlights
+  );
 
-  WB.events.on("industrychange.heatmap", function (selected) {
-    cellG.selectAll(".cellwrap")
-        .attr("opacity", d => {
-          const condition = WB.state.filters.condition;
-          const conditionOK =
-              condition === "All" ||
-              d.condition === condition;
+  WB.events.on(
+      "industrychange.heatmap",
+      updateHighlights
+  );
 
-          const industryOK =
-              selected.size === 0 ||
-              selected.has(d.industry);
-
-          return conditionOK && industryOK ? 1 : 0.15;
-        });
+  WB.events.on("daterangechange.heatmap", function () {
+      recompute();
+      render();
   });
 
   WB.events.on("reset.heatmap", function () {
-    cellG.selectAll(".cellwrap")
-        .attr("opacity", 1);
+      recompute();
+      render();
   });
 
   render();
-
 };
