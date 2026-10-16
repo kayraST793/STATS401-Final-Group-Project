@@ -1,3 +1,4 @@
+// NOTE: not loaded by index.html — superseded by viz4_chord.js.
 // viz4_network.js — industry correlation network; edges above a threshold, per condition.
 WB.drawNetwork = function (state) {
   const { corr, cfg, meta } = state;

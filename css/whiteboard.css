@@ -714,11 +714,15 @@ body {
 .dashboard-grid.has-focus {
     display: grid;
 
+    /* The focused chart gives up some width so the four minis stop being
+       thumbnails. At 2.2fr / 1fr the side column is roughly 30% of the row
+       instead of 22%, which is the difference between labels you can read
+       and labels you can only infer. */
     grid-template-columns:
-        minmax(0, 3.5fr)
-        minmax(180px, 1fr);
+        minmax(0, 2.2fr)
+        minmax(360px, 1fr);
 
-    column-gap: 10px;
+    column-gap: 12px;
     row-gap: 4px;
 
     align-items: start;
@@ -770,7 +774,7 @@ body {
 
     min-width: 0;
 
-    padding: 6px;
+    padding: 7px 8px;
 
     opacity: 0.94;
 
@@ -839,9 +843,61 @@ body {
 .dashboard-grid.has-focus .is-focused .wb-svg {
     display: block;
     width: 100%;
-    max-width: 900px;
+    max-width: 820px;
     height: auto;
     margin: 0 auto;
+}
+
+/* ============================================================
+   MINI LEGIBILITY
+
+   A mini card renders a 700-1060 unit viewBox into roughly 380px, so every
+   label shrinks by a factor of 2 to 3 and 10px type lands near 4px. The
+   viewBox coordinates are what the text is sized in, so scaling the type UP
+   inside the viewBox is what actually makes it readable once rendered.
+   ============================================================ */
+
+.dashboard-grid.has-focus .is-mini .wb-svg text {
+    font-size: 15px;
+}
+
+.dashboard-grid.has-focus .is-mini .hm-label,
+.dashboard-grid.has-focus .is-mini .hm-value {
+    font-size: 13.5px;
+}
+
+.dashboard-grid.has-focus .is-mini .chord-label {
+    font-size: 15px;
+}
+
+/* These need the #chord-small prefix to outrank the base rules, which are
+   themselves ID-scoped and would otherwise win the cascade. */
+.dashboard-grid.has-focus .is-mini #chord-small .chord-mini-label {
+    font-size: 17px;
+}
+
+.dashboard-grid.has-focus .is-mini #chord-small .chord-mini-title {
+    font-size: 20px;
+}
+
+.dashboard-grid.has-focus .is-mini #chord-small .chord-mini-sub {
+    font-size: 15px;
+}
+
+.dashboard-grid.has-focus .is-mini .net-label {
+    font-size: 14px;
+}
+
+.dashboard-grid.has-focus .is-mini .quadrant-choice {
+    font-size: 17px;
+}
+
+/* Explanatory prose belongs to the expanded card only — in a mini it pushes
+   the chart out of view, which is the opposite of what a thumbnail is for. */
+.dashboard-grid.has-focus .is-mini .chart-note,
+.dashboard-grid.has-focus .is-mini .viz-card-header p,
+.dashboard-grid.has-focus .is-mini p {
+    display: none;
 }
 
 .dashboard-grid.has-focus .is-mini .wb-svg {
@@ -1098,62 +1154,7 @@ body {
    LINKED VISUALIZATION INTERACTIONS
    ============================================================ */
 
-/* Active filter indicator */
 
-.filter-status {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-
-    padding: 10px 14px;
-    margin: 0 0 12px;
-
-    border: 1px solid var(--border);
-    border-radius: 10px;
-
-    background: #ffffff;
-    color: var(--text-secondary);
-
-    font-size: 12px;
-}
-
-/* Highlight when filters are active */
-
-.filter-status.is-filtered {
-    background: var(--accent-soft);
-    border-color: #bfd2e2;
-    color: var(--accent);
-    font-weight: 650;
-}
-
-/* Clear filters button */
-
-.filter-status button {
-    border: 1px solid var(--border-strong);
-    border-radius: 7px;
-
-    padding: 6px 10px;
-
-    background: #ffffff;
-    color: var(--text);
-
-    font: inherit;
-    cursor: pointer;
-
-    transition:
-        background 160ms ease,
-        color 160ms ease;
-}
-
-.filter-status button:hover {
-    background: var(--text);
-    color: #ffffff;
-}
-
-.filter-status button[hidden] {
-    display: none;
-}
 
 /* ============================================================
    CLICKABLE SCATTER QUADRANTS
@@ -1201,4 +1202,293 @@ body {
     fill: #2563eb;
     stroke: white;
     stroke-width: 1;
+}
+/* ============================================================
+   ADDED: ANIMATION CONTROLS + CHORD
+   ============================================================ */
+
+/* playback speed, sits in the dashboard heading next to Reset */
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.speed-label {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.spd-btn {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--text-secondary);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.spd-btn:hover { border-color: var(--border-strong); color: var(--text); }
+
+.spd-btn.on {
+    background: var(--text);
+    border-color: var(--text);
+    color: #fff;
+}
+
+.controls button[disabled] {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.stat-line {
+    margin: 2px 0 10px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* timeline playback marker */
+.tl-playlabel {
+    font-size: 11px;
+    font-weight: 700;
+    fill: #315f85;
+    pointer-events: none;
+}
+
+/* chord */
+.chord-label {
+    font-size: 11px;
+    fill: var(--text);
+    pointer-events: none;
+}
+
+.chord-ribbon { cursor: pointer; }
+
+.chord-window {
+    font-size: 13px;
+    font-weight: 700;
+    fill: #315f85;
+}
+
+/* chord small multiples — four conditions side by side */
+#chord-small .chord-mini-title {
+    font-size: 13px;
+    font-weight: 700;
+    fill: var(--text);
+}
+
+#chord-small .chord-mini-sub {
+    font-size: 10.5px;
+    fill: var(--muted, #6b7785);
+}
+
+#chord-small .chord-mini-label {
+    font-size: 8.5px;
+    fill: var(--text);
+    pointer-events: none;
+}
+
+#chord-small .mini-ribbon { cursor: pointer; }
+
+/* scatter density contours sit under the points */
+.density-layer path { pointer-events: none; }
+
+/* viz1 line legend */
+.tl-legend-label {
+    font-size: 11px;
+    fill: var(--text);
+}
+
+
+/* heatmap row labels are clickable now */
+.rowlab { cursor: pointer; }
+.rowlab rect { pointer-events: all; }
+
+/* error banner stays visible wherever the page is scrolled */
+#error {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+}
+
+/* mini cards hide their stat line and controls along with everything else */
+.dashboard-grid.has-focus .is-mini .stat-line { display: none; }
+
+/* ============================================================
+   STICKY FILTER DOCK
+   ============================================================ */
+
+.filter-dock {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    margin: 0 0 14px;
+    padding: 11px 15px;
+
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(6px);
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+
+    font-size: 12px;
+}
+
+.filter-dock.is-filtered {
+    border-color: #bfd2e2;
+    box-shadow: 0 4px 16px rgba(49, 95, 133, 0.12);
+}
+
+.dock-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 9px;
+}
+
+.dock-row--minor {
+    padding-top: 6px;
+    border-top: 1px dashed var(--border);
+}
+
+.dock-label {
+    min-width: 76px;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.dock-readout {
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.dock-readout.is-set {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.dock-sep {
+    width: 1px;
+    height: 18px;
+    background: var(--border);
+}
+
+.dock-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.dock-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    padding: 3px 9px;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+
+    background: #fff;
+    color: var(--text-secondary);
+
+    font: inherit;
+    font-size: 11px;
+
+    cursor: pointer;
+    white-space: nowrap;
+
+    transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.dock-chip:hover { border-color: var(--border-strong); color: var(--text); }
+
+.dock-chip.on {
+    background: var(--text);
+    border-color: var(--text);
+    color: #fff;
+    font-weight: 700;
+}
+
+.dock-chip .swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, .18);
+}
+
+.dock-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+.dock-clear,
+.dock-reset {
+    padding: 3px 9px;
+    border: 1px solid var(--border-strong);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--text);
+    font: inherit;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.dock-clear:hover,
+.dock-reset:hover { background: var(--text); color: #fff; }
+
+.dock-reset {
+    margin-left: auto;
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.dock-reset:hover { background: var(--accent); color: #fff; }
+
+.dock-clear[hidden],
+.dock-reset[hidden] { display: none; }
+
+/* clickable condition legend in "The question" */
+.cond-legend .cond-pick {
+    cursor: pointer;
+    padding: 3px 9px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    transition: opacity 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.cond-legend .cond-pick:hover {
+    border-color: var(--border);
+    background: var(--surface-soft);
+}
+
+.cond-legend .cond-pick.dim { opacity: 0.35; }
+
+/* keep a focused card's header clear of the pinned dock */
+main section { scroll-margin-top: 150px; }
+
+@media (max-width: 760px) {
+    .filter-dock { position: static; }
+    .dock-label { min-width: 0; }
 }

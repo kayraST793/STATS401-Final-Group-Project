@@ -6,8 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STATS 401 — Industry Performance Across Market Conditions (Whiteboard)</title>
 
+    <!-- Inline favicon. Browsers request /favicon.ico on every page load, and
+         python -m http.server answers with a 404 ("File not found") in the
+         console. Nothing is broken by it, but declaring one here stops the
+         request being made at all, so the console stays clean for real errors.
+         A data: URI keeps it offline-safe and needs no extra file. -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Crect%20width='16'%20height='16'%20rx='3'%20fill='%23315f85'/%3E%3Cpath%20d='M3%2010h2.2v4H3zM6.9%206h2.2v8H6.9zM10.8%208.5H13V14h-2.2z'%20fill='%23fff'/%3E%3C/svg%3E">
+
     <!-- self-contained whiteboard stylesheet (merged from ../css/style.css) -->
-    <link rel="stylesheet" href="css/whiteboard.css">
+    <link rel="stylesheet" href="css/whiteboard.css?v=2026-10-15e">
 </head>
 
 <body class="wide">
@@ -21,7 +28,7 @@
     <a href="#viz1">1 · Timeline</a>
     <a href="#viz2">2 · Conditions</a>
     <a href="#viz3">3 · Heatmap</a>
-    <a href="#viz4">4 · Network</a>
+    <a href="#viz4">4 · Chord</a>
     <a href="#viz5">5 · Comparison</a>
     <a href="#data">Data</a>
 </nav>
@@ -111,6 +118,8 @@
                 </button>
             </div>
 
+            <div id="timeline-controls"></div>
+
             <div class="viz-content">
                 <div id="timeline"></div>
             </div>
@@ -138,6 +147,8 @@
                 </button>
             </div>
 
+            <div id="scatter-controls"></div>
+
             <div class="viz-content">
                 <div id="scatter"></div>
             </div>
@@ -155,7 +166,7 @@
                     <span class="viz-step">03 · PATTERN</span>
                     <h3>How do industries respond?</h3>
                     <p>
-                        Compare average and risk-adjusted performance by regime.
+                        Performance against the market, raw, or risk-adjusted — by regime.
                     </p>
                 </div>
 
@@ -177,14 +188,14 @@
         <!-- ==================================================
              4. NETWORK
              ================================================== -->
-        <section id="viz4" class="viz-card" data-viz="network">
+        <section id="viz4" class="viz-card" data-viz="chord">
 
             <div class="viz-card-header">
                 <div class="viz-title-group">
                     <span class="viz-step">04 · RELATIONSHIPS</span>
                     <h3>Which industries move together?</h3>
                     <p>
-                        Explore how correlation structure changes by regime.
+                        Fixed positions on the ring — or one ring per condition when several are picked.
                     </p>
                 </div>
 
@@ -194,10 +205,11 @@
                 </button>
             </div>
 
-            <div id="network-controls"></div>
+            <div id="chord-controls"></div>
+            <p id="chord-stat" class="chart-note stat-line"></p>
 
             <div class="viz-content">
-                <div id="network"></div>
+                <div id="chord"></div>
             </div>
 
         </section>
@@ -213,7 +225,7 @@
                     <span class="viz-step">05 · DEEP DIVE</span>
                     <h3>What does this mean over time?</h3>
                     <p>
-                        Compare cumulative industry performance through changing regimes.
+                        Cumulative growth on a log scale, with the condition ribbon aligned beneath.
                     </p>
                 </div>
 
@@ -269,14 +281,90 @@
 
 <div id="tooltip" class="tooltip"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-<script src="js/config.js"></script>
-<script src="js/viz1_timeline.js"></script>
-<script src="js/viz2_scatter.js"></script>
-<script src="js/viz3_heatmap.js"></script>
-<script src="js/viz4_network.js"></script>
-<script src="js/viz5_comparison.js"></script>
-<script src="js/main.js"></script>
+<!-- d3 bundled locally so the dashboard works offline and on networks that
+     block CDNs; the CDN below is only a fallback. -->
+<script src="js/d3.v7.min.js"></script>
+<script>
+  if (!window.d3) {
+    document.write('<scr' + 'ipt src="https://cdn.jsdelivr.net/npm/d3@7"></scr' + 'ipt>');
+  }
+</script>
+<!-- The ?v= stamp is a cache-buster. Bump it if you ever edit a .js file and
+     the browser keeps serving the old one. -->
+<script src="js/config.js?v=2026-10-15e"></script>
+<script src="js/viz1_timeline.js?v=2026-10-15e"></script>
+<script src="js/viz2_scatter.js?v=2026-10-15e"></script>
+<script src="js/viz3_heatmap.js?v=2026-10-15e"></script>
+<script src="js/viz4_chord.js?v=2026-10-15e"></script>
+<script src="js/viz5_comparison.js?v=2026-10-15e"></script>
+<script src="js/main.js?v=2026-10-15e"></script>
+
+<!-- Self-check: report load failures on the page rather than leaving a blank. -->
+<script>
+(function () {
+  function report(html) {
+    var el = document.getElementById("error");
+    el.style.display = "block";
+    el.innerHTML = html;
+  }
+  if (!window.d3) {
+    report("<b>d3 did not load.</b> Check that <code>js/d3.v7.min.js</code> sits beside the other scripts.");
+    return;
+  }
+  var need = ["drawTimeline", "drawScatter", "drawHeatmap", "drawChord", "drawComparison"];
+  var missing = need.filter(function (f) { return !(window.WB && window.WB[f]); });
+  if (missing.length) {
+    report("<b>Some view scripts did not load:</b> " + missing.join(", ") +
+           ".<br>Check the Network tab for 404s under <code>js/</code>.");
+    return;
+  }
+
+  // ---- MIXED-VERSION CHECK -------------------------------------------------
+  // The shared layer (events, filter dock, focus layout, palette, correlation
+  // helpers) all lives in main.js. If an older main.js is being served next to
+  // the current view files, every view throws "WB.events is undefined", the
+  // Expand buttons do nothing and the filter dock never appears. That reads as
+  // three unrelated bugs, so name it here instead.
+  var EXPECTED = "2026-10-15e";
+  var shared = ["events", "rowsInScope", "corrFor", "setPalette", "heatmapInterpolator"];
+  var lost = shared.filter(function (k) { return !(window.WB && window.WB[k]); });
+
+  if (lost.length || WB.BUILD !== EXPECTED) {
+    report(
+      "<b>Mixed file versions.</b> <code>js/main.js</code> is from a different " +
+      "build than the rest of this page" +
+      (WB.BUILD ? " (it reports <code>" + WB.BUILD + "</code>, this page expects <code>" +
+        EXPECTED + "</code>)" : " (it has no build stamp at all, so it predates the merge)") +
+      ".<br>Missing from the shared layer: <code>" +
+      (lost.length ? lost.join(", ") : "—") + "</code>." +
+      "<br><br><b>Fix:</b> delete the whole project folder and unzip a fresh copy into an " +
+      "<i>empty</i> folder — unzipping on top of an old copy leaves stale files behind. " +
+      "Then hard-reload: <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>."
+    );
+    return;
+  }
+  setTimeout(function () {
+    if (!window.WB || !WB.state) {
+      report("<b>The data files never loaded.</b> The <code>data/</code> folder must sit beside " +
+             "<code>index.html</code>, and the server must be started from that same folder.");
+      return;
+    }
+    if (document.querySelectorAll("main svg").length === 0) {
+      report("<b>Data loaded but nothing drew.</b> Open the console and send the first red line.");
+      return;
+    }
+    if (!document.getElementById("filter-dock")) {
+      report("<b>The filter dock never rendered.</b> The sticky controls at the top of the " +
+             "dashboard come from <code>setupFilterDock</code> in <code>js/main.js</code>.");
+      return;
+    }
+    if (!document.querySelector(".focus-btn")) {
+      report("<b>The Expand buttons are missing.</b> <code>index.html</code> looks older than " +
+             "the rest of the build — unzip a fresh copy into an empty folder.");
+    }
+  }, 5000);
+})();
+</script>
 
 </body>
 
