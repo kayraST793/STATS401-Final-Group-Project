@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Final Report | Exploring Industry Performance Across Market Conditions</title>
+<style>
+:root{color-scheme:light;--ink:#1d2939;--muted:#64748b;--line:#dce5ed;--blue:#315f85;--bg:#f3f6f9;--green:#25804a}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);font:16px/1.75 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink)}.top{background:#172c40;color:white;padding:18px max(20px,calc((100vw - 1100px)/2));display:flex;justify-content:space-between;align-items:center;gap:16px}.top a{color:#e0eefc;text-decoration:none}.top button{border:1px solid #a5c4df;background:transparent;color:white;padding:8px 14px;border-radius:7px;cursor:pointer}.shell{max-width:1120px;margin:36px auto;display:grid;grid-template-columns:210px minmax(0,1fr);gap:26px;padding:0 18px}.toc{align-self:start;position:sticky;top:24px;padding:20px;background:white;border:1px solid var(--line);border-radius:12px}.toc strong{display:block;margin-bottom:12px}.toc a{display:block;padding:7px 0;color:#315f85;text-decoration:none;font-size:14px}.paper{background:white;border:1px solid var(--line);border-radius:14px;padding:52px 62px;box-shadow:0 5px 24px #1d29390a}.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:12px;font-weight:700;color:var(--blue)}h1{font-size:34px;line-height:1.2;margin:14px 0 14px}h2{font-size:23px;margin:38px 0 12px;border-bottom:1px solid var(--line);padding-bottom:9px}h3{font-size:18px;margin:23px 0 8px}p{margin:12px 0}ul{padding-left:23px}.subtitle{font-size:18px;color:var(--muted)}.byline{color:var(--muted);font-size:14px}.abstract{border-left:4px solid var(--blue);padding:12px 20px;background:#f5f9fc;margin:28px 0}.figure{margin:20px 0 28px;border:1px dashed #b9c8d5;border-radius:10px;background:#f8fafc;text-align:center;padding:28px 18px}.figure span{display:block;font-weight:700;color:#44617a}.figure small{color:var(--muted)}figcaption{font-size:13px;color:var(--muted);margin-top:8px}.note{font-size:13px;color:#7b4c12;background:#fff9ec;padding:12px 16px;border-radius:8px}.refs a{overflow-wrap:anywhere}.end{font-size:13px;color:var(--muted);margin-top:32px}@media(max-width:850px){.shell{display:block;margin:15px auto}.toc{position:static;margin-bottom:16px}.paper{padding:27px 22px}h1{font-size:28px}}@media print{body{background:white;font-size:11pt}.top,.toc{display:none}.shell{display:block;margin:0;padding:0}.paper{border:0;box-shadow:none;padding:0}.figure{break-inside:avoid}h2,h3{break-after:avoid}a{color:inherit}}
+.figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    object-fit: contain;
+}
+</style>
+</head>
+<body>
+<header class="top"><a href="index.html">← Back to dashboard</a><button onclick="window.print()">Print / Save PDF</button></header>
+<div class="shell"><nav class="toc" aria-label="Report contents"><strong>Final report</strong><a href="#intro">1. Introduction</a><a href="#method">2. Method</a><a href="#results">3. Results &amp; Visualizations</a><a href="#discussion">4. Discussion</a><a href="#conclusion">5. Conclusion</a><a href="#roles">6. Team Contributions</a><a href="#sources">Data Sources</a></nav>
+<main class="paper">
+<div class="eyebrow">STATS 401 · Data Acquisition and Visualization</div>
+<h1>Exploring Industry Performance Across Market Conditions</h1>
+<p class="subtitle">An interactive exploration of how U.S. industries behave in rising, falling, calm, and volatile markets</p>
+<p class="byline">Kayra Seike Tanrikulu &amp; Emily Biaz · Fall Session 1 2026</p>
+<div class="abstract"><strong>Project overview.</strong> We combine historical S&amp;P 500, VIX, and twelve-industry return data in five linked D3.js visualizations. The dashboard allows users to move from an overview of market conditions to comparisons of industry returns, relationships, and cumulative performance. It is designed for a general audience, including people without a finance background.</div>
+<section id="intro"><h2>1. Introduction</h2>
+<p>The U.S. stock market is often described as if it moves in one direction, but individual industries do not always respond in the same way. Healthcare, energy, utilities, finance, and other sectors face different economic pressures. Understanding these differences is useful for interpreting financial news and seeing why an overall market increase or decline does not describe every part of the economy.</p>
+<p>Our main research question is: <strong>How does industry performance differ across U.S. stock market conditions?</strong> We explore five related questions: when conditions occurred, what distinguishes them, which industries performed relatively well or poorly, which industries moved similarly, and how selected industries changed over time. Our goal is not to predict stock prices or recommend investments. Instead, we make historical patterns easier to explore and compare.</p>
+<p>The intended audience includes students and general readers with limited financial knowledge. We therefore use familiar charts, consistent colors, short explanations, and linked interactions. Rather than asking users to interpret one large financial table, we organize the experience from market context to industry-level detail.</p></section>
+<section id="method"><h2>2. Method</h2>
+<h3>Data acquisition and preparation</h3>
+<p>We use three public datasets: daily S&amp;P 500 index levels from the Federal Reserve Economic Data (FRED) series SP500; daily CBOE Volatility Index values from FRED series VIXCLS; and daily value-weighted returns for twelve industry portfolios from the Kenneth R. French Data Library. The analysis covers approximately ten years, from 2016 to 2026. These datasets provide complementary information about the direction of the broad market, expected volatility, and differences among industries.</p>
+<p>We process the data in Python by standardizing dates, handling missing observations, restricting the study period, and aligning the datasets on common trading days. S&amp;P 500 daily returns are calculated from consecutive index values. The twelve industry return series are organized in both long and grouped formats to support comparisons, filtering, and correlation calculations. Processed CSV and JSON files are loaded into the browser for visualization.</p>
+<h3>Market-condition definitions</h3>
+<p>We classify each trading day along two dimensions. Market direction is based on the sign of the S&amp;P 500 daily return: up or down. Volatility is classified using whether the day's VIX is below or above the study-period median. Combining these dimensions produces four conditions: <strong>Calm-Up, Calm-Down, Volatile-Up, and Volatile-Down.</strong> VIX represents market expectations of future volatility, not the actual size of that day's price movement. The categories are descriptive groupings, not causal explanations.</p>
+<h3>Implementation and analysis</h3>
+<p>The dashboard uses JavaScript and D3.js to generate all five visualizations, with HTML and CSS for layout. Shared application state stores selected conditions, date ranges, dates, and industries. When users interact with one view, event handlers notify the other views. We calculate average industry returns and, for the heatmap, an additional <em>excess return</em> measure: an industry's daily return minus the S&amp;P 500 return on the same day. This helps separate broad market direction from relative industry performance. Pearson correlations of industry returns support the relationship visualization; cumulative returns support comparisons over time.</p></section>
+<section id="results"><h2>3. Results and Interactive Visualizations</h2>
+<h3>Visualization 1 — Market Conditions Timeline</h3>
+<p>The timeline combines S&amp;P 500 levels and VIX values with a colored condition ribbon. It answers <em>when</em> different market environments occurred and gives context for changes across the decade. Users can hover for values, brush a date interval to filter the dashboard, and inspect the condition ribbon at different time resolutions. Playback controls provide another way to follow the historical sequence. This view establishes the time frame for the remaining charts.</p>
+<figure class="figure">
+    <img src="images/timeline-viz1.png" alt="Market Conditions Timeline">
+    <figcaption>
+        Figure 1. Market context, condition history, and date-range selection.
+    </figcaption>
+</figure>
+<h3>Visualization 2 — Market Conditions Scatterplot</h3>
+<p>The scatterplot positions trading days by S&amp;P 500 return and VIX, making the four conditions visible as regions of a two-dimensional space. It explains why a rising market can still be volatile and why falling prices do not necessarily imply high volatility. Users can inspect individual days, select conditions, and explore the distribution using density contours and guided animation. This view connects the category labels to the actual variables used to define them.</p>
+<figure class="figure">
+    <img src="images/scatter-viz2.png" alt="Market Conditions Timeline">
+    <figcaption>Figure 2. Daily market returns and VIX by condition.</figcaption>
+</figure>
+<h3>Visualization 3 — Industry Performance Heatmap</h3>
+<p>The heatmap directly addresses our main question by comparing twelve industries across four conditions. Rows represent industries, columns represent market environments, and cell colors encode performance. Users can switch between average return, excess return relative to the S&amp;P 500, and a risk-adjusted measure, as well as sort and select industries. The excess-return view is especially important: because Up and Down categories are partly defined by market returns, raw averages can simply repeat the market direction. Relative performance reveals which industries held up better or lagged within the same environment.</p>
+<figure class="figure">
+    <img src="images/heatmap-viz3.png" alt="Market Conditions Timeline">
+    <figcaption>Figure 3. Industry-level differences across market conditions.</figcaption>
+</figure>
+<h3>Visualization 4 — Industry Relationship Chord Diagram</h3>
+<p>Our proposal originally planned a force-directed network, but the final design uses a chord diagram to compare industry relationships more consistently. Industries occupy fixed positions around a circle, and connections represent correlations between their daily returns. Users can change the correlation threshold and compare selected conditions. A fixed ordering reduces the difficulty of remembering where an industry moved between views. This visualization examines whether industries that appear different in average performance nevertheless tend to move together, and whether those relationships vary by market environment.</p>
+<figure class="figure">
+    <img src="images/chord-viz4.png" alt="Market Conditions Timeline">
+    <figcaption>Figure 4. Correlation-based industry relationships.</figcaption></figure>
+<h3>Visualization 5 — Interactive Industry Comparison</h3>
+<p>The final view follows selected industries' cumulative growth through time. Unlike the heatmap, which summarizes typical daily outcomes, this chart shows how gains and losses accumulate and how industry paths diverge. Users can choose industries, inspect values with a crosshair tooltip, and change the vertical scale. A logarithmic scale supports comparisons of proportional changes, while a condition ribbon links the growth paths back to the market environments established in the first view. Together, the five charts move from overview to classification, comparison, relationships, and long-term context.</p>
+<figure class="figure">
+    <img src="images/comparison-viz5.png" alt="Market Conditions Timeline">
+    <figcaption>Figure 5. Cumulative performance of selected industries.</figcaption></figure>
+<p><strong>Cross-view exploration.</strong> The dashboard supports date brushing, condition selection (including multiple conditions), industry selection, highlighting, metric changes, details on demand, and reset controls. These are not separate decorations: they let users investigate the same question from multiple perspectives without manually reconstructing filters in every chart.</p></section>
+<section id="discussion"><h2>4. Discussion and Design Evaluation</h2>
+<p>We designed the visualizations around complementary tasks. The timeline supports temporal overview and filtering; the scatterplot explains the classification; the heatmap supports direct comparison; the chord diagram shows relationships; and the cumulative chart provides historical detail. In terms of the What–Why–How framework, the data include temporal, numerical, and categorical attributes; the tasks include identifying, comparing, filtering, and exploring; and the encodings include position, color, connected marks, and linked selections.</p>
+<p>A key strength is coordination. A date range selected on the timeline can carry into industry summaries and correlations, making comparisons more meaningful. Multi-condition selection allows side-by-side inspection rather than requiring users to remember one chart state while switching to another. We also provide a color-vision-friendlier palette because red and green alone can be difficult to distinguish. Explanatory text and a visible filter dock help users understand both the market terminology and their current selections.</p>
+<p>There are limitations. Correlation measures co-movement, not causation; strong links do not mean one industry influences another. VIX is an imperfect summary of uncertainty, and dividing days at a single median threshold simplifies a continuous variable. Market conditions are also defined using daily observations, so they should not be interpreted as long economic regimes. Finally, historical average returns and cumulative paths are sensitive to the chosen date range and should not be treated as forecasts. Dense chord connections and small heatmap cells can still challenge readability, especially on narrow screens.</p>
+<p>Possible improvements include user testing with non-finance participants, clearer annotations of unusual periods, additional measures of uncertainty, and alternative ways to compare industry relationships. A useful evaluation would ask participants to identify the strongest industry under a selected condition and explain how their answer changes after filtering dates, measuring accuracy, time, and confidence.</p></section>
+<section id="conclusion"><h2>5. Conclusion</h2>
+<p>This project demonstrates why broad market movement is only part of the story. By combining market direction, expected volatility, and twelve industry return series, the dashboard allows users to explore when different conditions occurred, how industries performed relative to the market, and how industry relationships and cumulative paths differed. The main contribution is not a single ranking of “best” industries but an interactive way to investigate how answers depend on the market environment and selected period.</p>
+<p>Our five linked views turn a complex financial dataset into a guided exploration for non-specialists. They also show why relative performance, correlation, and cumulative growth answer different questions. The dashboard is intended to support interpretation and further questioning rather than financial prediction.</p></section>
+<section id="roles"><h2>6. Roles and Responsibilities</h2>
+<p><strong>Kayra Seike Tanrikulu:</strong> data acquisition, cleaning, processing, and integration; D3.js development of the timeline and industry heatmap.</p>
+<p><strong>Emily Biaz:</strong> visualization, interaction, and interface design; D3.js development of the scatterplot, industry relationship view, and industry comparison chart.</p>
+<p><strong>Shared:</strong> linking the five visualizations, integration, testing and debugging, documentation, and presentation preparation. These responsibilities follow the original proposal and should be adjusted if the final division of work changed.</p></section>
+<section id="sources" class="refs"><h2>Data Sources</h2>
+<ul><li>Federal Reserve Economic Data (FRED), S&amp;P 500: <a href="https://fred.stlouisfed.org/series/SP500">fred.stlouisfed.org/series/SP500</a></li><li>Federal Reserve Economic Data (FRED), CBOE Volatility Index (VIX): <a href="https://fred.stlouisfed.org/series/VIXCLS">fred.stlouisfed.org/series/VIXCLS</a></li><li>Kenneth R. French Data Library, 12 Industry Portfolios: <a href="https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html">mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html</a></li></ul></section>
+<p class="end">STATS 401 · Final Group Project · Exploring Industry Performance Across Market Conditions</p>
+</main></div></body></html>
